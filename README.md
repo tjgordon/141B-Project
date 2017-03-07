@@ -5,6 +5,9 @@
 ## Plan of attack  
 We are taking a bit of an exploratory data analysis approach by seeing what questions we have as we go along and what data we want to try and find to add in. We plan on using visualizations as much as possible and we definitely want to make use of plotting over a map of SF.  
 
+## New Phrasing of Question
+How does it work in a big city when a mattress is left out on the street, human waste is all over the street, or when a garbage can overflows? How do these cleaning requests vary in type and length to fulfill based on type or neighborhood demographics. 
+
 ## Datasets  
 Our primary dataset is the Street and Sidewalk Cleaning dataset from SF OpenData:  
 https://data.sfgov.org/City-Management-and-Ethics/Street-and-Sidewalk-Cleaning/h3eg-w3pj   
