@@ -28,6 +28,7 @@ What are the more common sources of how the cleaning request was sent in? How co
 
 
 **Other Question ideas**  
+- Important events? (Ex: OWS?)
 - Requests by income in neighborhood
 - other demographics
     - housing prices

@@ -47,7 +47,7 @@ street.to_hdf('street.h5','table',append=False)
 #street2 = pd.read_hdf('street.h5')
 
 
-# In[3]:
+# In[2]:
 
 street = feather.read_dataframe('street.feather')
 
@@ -63,21 +63,21 @@ street = feather.read_dataframe('street.feather')
 #all(street == street_csv)
 
 
-# In[7]:
+# In[3]:
 
 street.head()
 
 
 # Some basic statistics on the dataset we are starting with:
 
-# In[8]:
+# In[4]:
 
 numRows = street.shape[0]
 print "We are working with", numRows, "rows."
 print "Our dates range from", street.loc[numRows - 1, "Opened"],"to", street.loc[0, "Opened"], "."
 
 
-# In[9]:
+# In[5]:
 
 #plt.figure(figsize=(2,100)) # Doesn't do much
 theOrder = ["Voice In", "Open311", "Web Self Service", "Integrated Agency", "Twitter", "e-mail In", "Other Department"]
@@ -90,17 +90,17 @@ plt.show()
 
 # According to [the project's website](http://www.open311.org/learn/), Open311 allows people to report issues in public spaces to city officials through a [website](https://sf311.org/index.aspx?page=797) or [mobile app](https://www.sf311.org/mobile).  
 
-# In[10]:
+# In[6]:
 
 street.Neighborhood.unique()
 
 
-# In[11]:
+# In[7]:
 
 street.Neighborhood.value_counts
 
 
-# In[12]:
+# In[8]:
 
 # From: http://stackoverflow.com/questions/22391433/count-the-frequency-that-a-value-occurs-in-a-dataframe-column
 counts = street.groupby('Neighborhood').count()
@@ -109,19 +109,19 @@ counts = street.groupby('Neighborhood').count()
 # We can get the total number of cases from CaseID
 # unresolved cases by neighborhood
 
-# In[13]:
+# In[9]:
 
 counts = counts.sort_values(by = "CaseID",
                             ascending = False)
 counts = counts.reset_index()
 
 
-# In[14]:
+# In[10]:
 
 counts.head()
 
 
-# In[15]:
+# In[36]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.factorplot(x = "CaseID", 
@@ -129,14 +129,14 @@ ax = sns.factorplot(x = "CaseID",
                     data = counts.head(15), 
                     kind = "bar", 
                     orient = "h", 
-                    aspect = 3
+                    aspect = 2
                    )#, size = 10)
 ax.set_xlabels("Requests")
 plt.title("Requests by Neighborhood (Top 15 Neighborhoods)") 
 plt.show()
 
 
-# In[16]:
+# In[12]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.factorplot(x = "CaseID", 
@@ -151,17 +151,17 @@ plt.title("Requests by Neighborhood (Bottom 15 Neighborhoods)")
 plt.show()
 
 
-# In[17]:
+# In[13]:
 
 counts['UnclosedProp'] = (counts.Opened - counts.Closed) / counts.Opened
 
 
-# In[18]:
+# In[14]:
 
 counts.head()
 
 
-# In[19]:
+# In[15]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.factorplot(x = "UnclosedProp", 
@@ -178,13 +178,13 @@ plt.show()
 
 # Use supervisor district where there are too many neighborhoods. 
 
-# In[20]:
+# In[16]:
 
 request_counts = street.groupby(by = "Request Type").count().reset_index().ix[:,["Request Type","CaseID"]].sort_values(by = "CaseID", ascending = False)
 request_counts.head()
 
 
-# In[21]:
+# In[17]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.factorplot(y = "Request Type", 
@@ -206,23 +206,23 @@ plt.show()
 # Note: only use 2009 through 2016 to only count full years.  
 # Ask TA if we should do this for all analysis or just this part.
 
-# In[22]:
+# In[18]:
 
 street['month'] = [timestamp.month for timestamp in street.Opened]
 
 
-# In[23]:
+# In[19]:
 
 street.head()
 
 
-# In[24]:
+# In[20]:
 
 count_by_month = street.groupby(by='month').count().CaseID.reset_index()
 count_by_month
 
 
-# In[25]:
+# In[21]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.pointplot(y = "CaseID", 
@@ -242,12 +242,12 @@ plt.show()
 
 # # Scraping
 
-# In[26]:
+# In[22]:
 
 requests_cache.install_cache('sf_cache')
 
 
-# In[27]:
+# In[23]:
 
 url = "http://www.city-data.com/nbmaps/neigh-San-Francisco-California.html"
 response = requests.get(url)
@@ -258,22 +258,22 @@ neighborhoods_bs = BeautifulSoup(response.text, 'lxml')
 neighborhood_names = neighborhoods_bs.find_all(name = "span", attrs={'class':'street-name'})
 
 
-# In[28]:
+# In[24]:
 
 neighborhood_names = [name.text for name in neighborhood_names]
 
 
-# In[29]:
+# In[25]:
 
 neighborhood_names
 
 
-# In[30]:
+# In[26]:
 
 neighborhood_divs = neighborhoods_bs.body.find_all(name = "div", attrs={'class':'neighborhood'})
 
 
-# In[31]:
+# In[27]:
 
 neighborhood_divs[0].text
 
@@ -281,17 +281,17 @@ neighborhood_divs[0].text
 # regular expressions
 # [capital letter][lowercase][:][ ][numbers or , or $]
 
-# In[32]:
+# In[28]:
 
 neighborhood_divs[0].find_all(name = "b")
 
 
-# In[33]:
+# In[29]:
 
 neighborhood_divs[0].contents
 
 
-# In[34]:
+# In[30]:
 
 type(neighborhood_divs[0].contents[1])
 
@@ -300,12 +300,12 @@ type(neighborhood_divs[0].contents[1])
 # if a navigable string can be converted to int,  
 # then grab it and the first <b> that precedes it  
 
-# In[35]:
+# In[31]:
 
 neighborhood_divs[0].strings
 
 
-# In[36]:
+# In[32]:
 
 # Add to a list of strings
 strings = []
@@ -316,7 +316,7 @@ for descendant in neighborhood_divs[0].strings:
 strings
 
 
-# In[37]:
+# In[33]:
 
 #contents = neighborhood_divs[0].contents
 
@@ -357,17 +357,12 @@ for i in range(1, len(strings)):
 value_dict_list
 
 
-# In[38]:
+# In[34]:
 
 strings
 
 
-# In[39]:
+# In[35]:
 
 int("9,999")
-
-
-# In[ ]:
-
-def get_
 
