@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[1]:
+# In[5]:
 
 import pandas as pd
 import seaborn as sns
@@ -16,6 +16,7 @@ from bs4 import BeautifulSoup
 import bs4
 import re
 get_ipython().magic('matplotlib inline')
+#plt.rcParams['figure.figsize'] = (12,12)
 
 
 # In[ ]:
@@ -47,7 +48,7 @@ street.to_hdf('street.h5','table',append=False)
 #street2 = pd.read_hdf('street.h5')
 
 
-# In[2]:
+# In[3]:
 
 street = feather.read_dataframe('street.feather')
 
@@ -68,16 +69,26 @@ street = feather.read_dataframe('street.feather')
 street.head()
 
 
+# In[37]:
+
+street = street.loc[street['Opened'].dt.year != 2008]
+street = street.loc[street['Opened'].dt.year != 2017]
+street = street.sort_values("Opened")
+street = street.reset_index()
+street = street.drop('index', 1)
+street.head()
+
+
 # Some basic statistics on the dataset we are starting with:
 
-# In[4]:
+# In[50]:
 
 numRows = street.shape[0]
 print "We are working with", numRows, "rows."
 print "Our dates range from", street.loc[numRows - 1, "Opened"],"to", street.loc[0, "Opened"], "."
 
 
-# In[5]:
+# In[91]:
 
 #plt.figure(figsize=(2,100)) # Doesn't do much
 theOrder = ["Voice In", "Open311", "Web Self Service", "Integrated Agency", "Twitter", "e-mail In", "Other Department"]
@@ -90,17 +101,17 @@ plt.show()
 
 # According to [the project's website](http://www.open311.org/learn/), Open311 allows people to report issues in public spaces to city officials through a [website](https://sf311.org/index.aspx?page=797) or [mobile app](https://www.sf311.org/mobile).  
 
-# In[6]:
+# In[52]:
 
 street.Neighborhood.unique()
 
 
-# In[7]:
+# In[53]:
 
 street.Neighborhood.value_counts
 
 
-# In[8]:
+# In[54]:
 
 # From: http://stackoverflow.com/questions/22391433/count-the-frequency-that-a-value-occurs-in-a-dataframe-column
 counts = street.groupby('Neighborhood').count()
@@ -109,19 +120,19 @@ counts = street.groupby('Neighborhood').count()
 # We can get the total number of cases from CaseID
 # unresolved cases by neighborhood
 
-# In[9]:
+# In[55]:
 
 counts = counts.sort_values(by = "CaseID",
                             ascending = False)
 counts = counts.reset_index()
 
 
-# In[10]:
+# In[56]:
 
 counts.head()
 
 
-# In[36]:
+# In[57]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.factorplot(x = "CaseID", 
@@ -136,7 +147,7 @@ plt.title("Requests by Neighborhood (Top 15 Neighborhoods)")
 plt.show()
 
 
-# In[12]:
+# In[58]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.factorplot(x = "CaseID", 
@@ -144,24 +155,24 @@ ax = sns.factorplot(x = "CaseID",
                     data = counts.tail(15), 
                     kind = "bar", 
                     orient = "h", 
-                    aspect = 3
+                    aspect = 2
                    )#, size = 10)
 ax.set_xlabels("Requests")
 plt.title("Requests by Neighborhood (Bottom 15 Neighborhoods)") 
 plt.show()
 
 
-# In[13]:
+# In[59]:
 
 counts['UnclosedProp'] = (counts.Opened - counts.Closed) / counts.Opened
 
 
-# In[14]:
+# In[60]:
 
 counts.head()
 
 
-# In[15]:
+# In[88]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.factorplot(x = "UnclosedProp", 
@@ -170,7 +181,7 @@ ax = sns.factorplot(x = "UnclosedProp",
                                               ascending = False).head(15), 
                     kind = "bar", 
                     orient = "h", 
-                    aspect = 3
+                    aspect = 2
                    )#, size = 10)
 plt.title("Proportion of Unclosed Cleaning Requests by Neighborhood (Top 15 Neighborhoods)") 
 plt.show()
@@ -178,13 +189,13 @@ plt.show()
 
 # Use supervisor district where there are too many neighborhoods. 
 
-# In[16]:
+# In[62]:
 
 request_counts = street.groupby(by = "Request Type").count().reset_index().ix[:,["Request Type","CaseID"]].sort_values(by = "CaseID", ascending = False)
 request_counts.head()
 
 
-# In[17]:
+# In[90]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.factorplot(y = "Request Type", 
@@ -192,9 +203,9 @@ ax = sns.factorplot(y = "Request Type",
                     data = request_counts, 
                     kind = "bar", 
                     orient = "h", 
-                    aspect = 3
+                    aspect = 2
                    )#, size = 10)
-plt.title("Requests Type by Neighborhood (Top 15 Neighborhoods)") 
+plt.title("Requests Type") 
 plt.show()
 
 
@@ -206,23 +217,23 @@ plt.show()
 # Note: only use 2009 through 2016 to only count full years.  
 # Ask TA if we should do this for all analysis or just this part.
 
-# In[18]:
+# In[64]:
 
 street['month'] = [timestamp.month for timestamp in street.Opened]
 
 
-# In[19]:
+# In[65]:
 
 street.head()
 
 
-# In[20]:
+# In[66]:
 
 count_by_month = street.groupby(by='month').count().CaseID.reset_index()
 count_by_month
 
 
-# In[21]:
+# In[67]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.pointplot(y = "CaseID", 
@@ -237,17 +248,67 @@ plt.title("Requests by Month")
 plt.show()
 
 
+# In[68]:
+
+count_by_month.plot(y = "CaseID", 
+                    x = "month")
+
+
 # Faster at closing requests by time?
 # Time to close requests by neighborhood?
 
+# In[92]:
+
+street['year'] = [timestamp.year for timestamp in street.Opened]
+count_by_year = street.groupby(by='year').count().CaseID.reset_index()
+sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
+ax = sns.pointplot(y = "CaseID", 
+                    x = "year",
+                    data = count_by_year, 
+                    kind = "bar", 
+                    aspect = 3,
+                   )#, size = 10)
+ax.set_ylabel("Cleaning Requests")
+ax.set_xlabel("Year")
+plt.title("Requests by Year") 
+plt.show()
+
+
+# In[69]:
+
+[(colname, len(street[colname].unique())) for colname in list(street)]
+
+
+# In[70]:
+
+by_month_req_type = street.groupby(by=['month','Request Type']).count().CaseID.reset_index()
+by_month_req_type = by_month_req_type.sort_values(by = ['month', "CaseID"], ascending=[True,False])
+by_month_req_type.head()
+
+
+# In[71]:
+
+#by_month_req_type = street.groupby(by=['month','Request Type']).plot()
+
+
+# In[72]:
+
+#street.groupby(by=['month','Request Type']).plot(y = 'CaseID', x = 'month')
+
+
+# In[73]:
+
+by_month_req_type.plot(y = 'CaseID', x = 'month')
+
+
 # # Scraping
 
-# In[22]:
+# In[74]:
 
 requests_cache.install_cache('sf_cache')
 
 
-# In[23]:
+# In[75]:
 
 url = "http://www.city-data.com/nbmaps/neigh-San-Francisco-California.html"
 response = requests.get(url)
@@ -258,22 +319,22 @@ neighborhoods_bs = BeautifulSoup(response.text, 'lxml')
 neighborhood_names = neighborhoods_bs.find_all(name = "span", attrs={'class':'street-name'})
 
 
-# In[24]:
+# In[76]:
 
 neighborhood_names = [name.text for name in neighborhood_names]
 
 
-# In[25]:
+# In[77]:
 
 neighborhood_names
 
 
-# In[26]:
+# In[78]:
 
 neighborhood_divs = neighborhoods_bs.body.find_all(name = "div", attrs={'class':'neighborhood'})
 
 
-# In[27]:
+# In[79]:
 
 neighborhood_divs[0].text
 
@@ -281,17 +342,17 @@ neighborhood_divs[0].text
 # regular expressions
 # [capital letter][lowercase][:][ ][numbers or , or $]
 
-# In[28]:
+# In[80]:
 
 neighborhood_divs[0].find_all(name = "b")
 
 
-# In[29]:
+# In[81]:
 
 neighborhood_divs[0].contents
 
 
-# In[30]:
+# In[82]:
 
 type(neighborhood_divs[0].contents[1])
 
@@ -300,12 +361,12 @@ type(neighborhood_divs[0].contents[1])
 # if a navigable string can be converted to int,  
 # then grab it and the first <b> that precedes it  
 
-# In[31]:
+# In[83]:
 
 neighborhood_divs[0].strings
 
 
-# In[32]:
+# In[84]:
 
 # Add to a list of strings
 strings = []
@@ -316,7 +377,7 @@ for descendant in neighborhood_divs[0].strings:
 strings
 
 
-# In[33]:
+# In[85]:
 
 #contents = neighborhood_divs[0].contents
 
@@ -357,12 +418,12 @@ for i in range(1, len(strings)):
 value_dict_list
 
 
-# In[34]:
+# In[86]:
 
 strings
 
 
-# In[35]:
+# In[87]:
 
 int("9,999")
 

@@ -29,6 +29,11 @@ What are the more common sources of how the cleaning request was sent in? How co
 
 **Other Question ideas**  
 - Important events? (Ex: OWS?)
+- Find proportion of a type of requests (ex: mattress)  
+- Are the neighborhood names with slashes on the borders of two neighborhoods?  
+- Determine day of week using doomsday algorithm and do analysis by weekday.  
+- histograms of columns
+- interactive maps with https://github.com/python-visualization/folium
 - Requests by income in neighborhood
 - other demographics
     - housing prices
