@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[98]:
+# In[1]:
 
 import pandas as pd
 import seaborn as sns
@@ -18,7 +18,7 @@ import re
 get_ipython().magic('matplotlib inline')
 
 
-# In[20]:
+# In[ ]:
 
 #%%timeit -r1 -n1 
 # timeit args from: http://stackoverflow.com/questions/32565829/simple-way-to-measure-cell-execution-time-in-ipython-notebook 
@@ -31,53 +31,53 @@ street_csv = pd.read_csv("Street_and_Sidewalk_Cleaning.csv",
                          parse_dates=parseDates)
 
 
-# In[22]:
+# In[ ]:
 
 feather.write_dataframe(street_csv, 'street.feather')
 
 
-# In[53]:
+# In[ ]:
 
 # Similar thing built in to pandas. Causes some error.
 street.to_hdf('street.h5','table',append=False)
 
 
-# In[56]:
+# In[2]:
 
 #street2 = pd.read_hdf('street.h5')
 
 
-# In[2]:
+# In[3]:
 
 street = feather.read_dataframe('street.feather')
 
 
-# In[57]:
+# In[4]:
 
 # To use the csv version
 # street = street_csv
 
 
-# In[3]:
+# In[6]:
 
-all(street == street_csv)
+#all(street == street_csv)
 
 
-# In[4]:
+# In[7]:
 
 street.head()
 
 
 # Some basic statistics on the dataset we are starting with:
 
-# In[5]:
+# In[8]:
 
 numRows = street.shape[0]
 print "We are working with", numRows, "rows."
 print "Our dates range from", street.loc[numRows - 1, "Opened"],"to", street.loc[0, "Opened"], "."
 
 
-# In[6]:
+# In[9]:
 
 #plt.figure(figsize=(2,100)) # Doesn't do much
 theOrder = ["Voice In", "Open311", "Web Self Service", "Integrated Agency", "Twitter", "e-mail In", "Other Department"]
@@ -90,17 +90,17 @@ plt.show()
 
 # According to [the project's website](http://www.open311.org/learn/), Open311 allows people to report issues in public spaces to city officials through a [website](https://sf311.org/index.aspx?page=797) or [mobile app](https://www.sf311.org/mobile).  
 
-# In[8]:
+# In[10]:
 
 street.Neighborhood.unique()
 
 
-# In[9]:
+# In[11]:
 
 street.Neighborhood.value_counts
 
 
-# In[10]:
+# In[12]:
 
 # From: http://stackoverflow.com/questions/22391433/count-the-frequency-that-a-value-occurs-in-a-dataframe-column
 counts = street.groupby('Neighborhood').count()
@@ -109,19 +109,19 @@ counts = street.groupby('Neighborhood').count()
 # We can get the total number of cases from CaseID
 # unresolved cases by neighborhood
 
-# In[11]:
+# In[13]:
 
 counts = counts.sort_values(by = "CaseID",
                             ascending = False)
 counts = counts.reset_index()
 
 
-# In[12]:
+# In[14]:
 
 counts.head()
 
 
-# In[39]:
+# In[15]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.factorplot(x = "CaseID", 
@@ -136,7 +136,7 @@ plt.title("Requests by Neighborhood (Top 15 Neighborhoods)")
 plt.show()
 
 
-# In[38]:
+# In[16]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.factorplot(x = "CaseID", 
@@ -151,17 +151,17 @@ plt.title("Requests by Neighborhood (Bottom 15 Neighborhoods)")
 plt.show()
 
 
-# In[14]:
+# In[17]:
 
 counts['UnclosedProp'] = (counts.Opened - counts.Closed) / counts.Opened
 
 
-# In[15]:
+# In[18]:
 
 counts.head()
 
 
-# In[16]:
+# In[19]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.factorplot(x = "UnclosedProp", 
@@ -172,19 +172,19 @@ ax = sns.factorplot(x = "UnclosedProp",
                     orient = "h", 
                     aspect = 3
                    )#, size = 10)
-plt.title("Proportion of Unclosed Requests by Neighborhood (Top 15 Neighborhoods)") 
+plt.title("Proportion of Unclosed Cleaning Requests by Neighborhood (Top 15 Neighborhoods)") 
 plt.show()
 
 
 # Use supervisor district where there are too many neighborhoods. 
 
-# In[17]:
+# In[20]:
 
 request_counts = street.groupby(by = "Request Type").count().reset_index().ix[:,["Request Type","CaseID"]].sort_values(by = "CaseID", ascending = False)
 request_counts.head()
 
 
-# In[18]:
+# In[21]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.factorplot(y = "Request Type", 
@@ -206,23 +206,23 @@ plt.show()
 # Note: only use 2009 through 2016 to only count full years.  
 # Ask TA if we should do this for all analysis or just this part.
 
-# In[19]:
+# In[22]:
 
 street['month'] = [timestamp.month for timestamp in street.Opened]
 
 
-# In[20]:
+# In[23]:
 
 street.head()
 
 
-# In[21]:
+# In[24]:
 
 count_by_month = street.groupby(by='month').count().CaseID.reset_index()
 count_by_month
 
 
-# In[35]:
+# In[25]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.pointplot(y = "CaseID", 
@@ -242,12 +242,12 @@ plt.show()
 
 # # Scraping
 
-# In[41]:
+# In[26]:
 
 requests_cache.install_cache('sf_cache')
 
 
-# In[56]:
+# In[27]:
 
 url = "http://www.city-data.com/nbmaps/neigh-San-Francisco-California.html"
 response = requests.get(url)
@@ -258,22 +258,22 @@ neighborhoods_bs = BeautifulSoup(response.text, 'lxml')
 neighborhood_names = neighborhoods_bs.find_all(name = "span", attrs={'class':'street-name'})
 
 
-# In[57]:
+# In[28]:
 
 neighborhood_names = [name.text for name in neighborhood_names]
 
 
-# In[58]:
+# In[29]:
 
 neighborhood_names
 
 
-# In[64]:
+# In[30]:
 
 neighborhood_divs = neighborhoods_bs.body.find_all(name = "div", attrs={'class':'neighborhood'})
 
 
-# In[82]:
+# In[31]:
 
 neighborhood_divs[0].text
 
@@ -281,17 +281,17 @@ neighborhood_divs[0].text
 # regular expressions
 # [capital letter][lowercase][:][ ][numbers or , or $]
 
-# In[76]:
+# In[32]:
 
 neighborhood_divs[0].find_all(name = "b")
 
 
-# In[90]:
+# In[33]:
 
 neighborhood_divs[0].contents
 
 
-# In[96]:
+# In[34]:
 
 type(neighborhood_divs[0].contents[1])
 
@@ -300,12 +300,12 @@ type(neighborhood_divs[0].contents[1])
 # if a navigable string can be converted to int,  
 # then grab it and the first <b> that precedes it  
 
-# In[102]:
+# In[35]:
 
 neighborhood_divs[0].strings
 
 
-# In[116]:
+# In[36]:
 
 # Add to a list of strings
 strings = []
@@ -316,7 +316,7 @@ for descendant in neighborhood_divs[0].strings:
 strings
 
 
-# In[133]:
+# In[37]:
 
 #contents = neighborhood_divs[0].contents
 
@@ -357,12 +357,12 @@ for i in range(1, len(strings)):
 value_dict_list
 
 
-# In[130]:
+# In[38]:
 
 strings
 
 
-# In[127]:
+# In[39]:
 
 int("9,999")
 
