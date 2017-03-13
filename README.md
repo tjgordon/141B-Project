@@ -49,5 +49,10 @@ What are the more common sources of how the cleaning request was sent in? How co
     - twitter
     - open311?
     
+**Parades and Festivals**
+(Make list of events manually and scrape wiki for past dates of these events)
+- San Francisco Pride
+- Outside Lands Music and Arts Festival
+- San Francisco Chinese New Year Festival and Parade
 
 
