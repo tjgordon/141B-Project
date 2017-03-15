@@ -2,3 +2,5 @@
 *.csv
 *.h5
 *.feather
+*.stfolder
+*.stversions
