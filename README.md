@@ -55,4 +55,5 @@ What are the more common sources of how the cleaning request was sent in? How co
 - Outside Lands Music and Arts Festival
 - San Francisco Chinese New Year Festival and Parade
 
-
+street = street.merge(demographic,  on = "Neighborhood", how = "left")
+street.head()
