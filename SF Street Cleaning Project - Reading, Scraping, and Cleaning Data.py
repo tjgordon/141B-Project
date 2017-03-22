@@ -1,14 +1,17 @@
 
 # coding: utf-8
 
-# # Libraries
+# # Reading, Scraping, and Cleaning Our Data
 
-# In[3]:
+# This notebook shows our process of data munging in more detail.
+
+# ## Packages
+
+# In[2]:
 
 # Loading in data:
 import numpy as np
 import pandas as pd
-#import feather
 
 # Parsing:
 import requests
@@ -19,100 +22,91 @@ import bs4
 import re
 
 
-# # Reading in the Data
+# # I. Reading in the Data - Our Primary Data Source
+
+# The following cell loads are data through read_csv and takes a long time to run, about 15 minutes on our devices. We use street.h5 to import the data faster after importing the csv once here.
 
 # In[ ]:
 
-# Warning: this cell takes a long time to run, about 15 minutes on our devices. 
-# We use street.h5 (which can be created in the next cell) instead to import the data faster 
-# after importing the csv once here.
+# Should only run this cell the first time running this notebook:
 
-# Note: To just read in part add nrows =
-parseDates = ["Opened", "Closed", "Updated"] # Convert these to datetimes
+# Convert these to datetimes
+parseDates = ["Opened", "Closed", "Updated"] 
 street_csv = pd.read_csv("Street_and_Sidewalk_Cleaning.csv", 
                          #nrows = 100000,
                          parse_dates=parseDates)
 
-
-# In[ ]:
-
-# Write feather
-#feather.write_dataframe(street_csv, 'street.feather')
-
-# Write h5
-street.to_hdf('street.h5','table',append=False)
+# Export h5 for faster reading in later
+street.to_hdf('street.h5','table',append=False) 
 
 
-# In[2]:
+# The next cell loads the h5 and displays the first few rows of our primary data source. All of the variables can be seen here.
 
-# Katherine run only this
+# In[3]:
+
+# Write h5: Run every second time and on of using this notebook
 street_hdf = pd.HDFStore('street.h5')
 street = street_hdf.select('/table')
 street.head()
 
 
-# In[3]:
+# ## Cleaning the data
 
-# Read feather
-#street = feather.read_dataframe('street.feather')
-
+# To keep counts of requests consistent over the months and days, we remove years with incomplete data since our original data set starts in November 2008 and ends in January 2017.  
 
 # In[4]:
 
-# To use the csv version
-# street = street_csv
+street = street.loc[street['Opened'].dt.year != 2008]
+street = street.loc[street['Opened'].dt.year != 2017]
+street = street.sort_values("Opened") # Re-sort data in date order
+street = street.reset_index() # Re-set the indexing
+street = street.drop('index', 1) # Get rid of old index column 
 
+
+# Some neighborhood names need to be changed to allow merging with other data sources later and to match our shape files.   
 
 # In[5]:
 
-# Check if the binary version is equivalent
-#all(street == street_csv)
-
-
-# # Cleaning the data
-
-# To keep counts of requests consistent over the months, we remove years with incomplete data.  
-
-# In[6]:
-
-# TODO: Only use this subset for some analysis, since some major events are outside this range. 
-street = street.loc[street['Opened'].dt.year != 2008]
-street = street.loc[street['Opened'].dt.year != 2017]
-street = street.sort_values("Opened")
-street = street.reset_index()
-street = street.drop('index', 1)
-
-
-# Some neighborhood names need to be changed to allow merging with other data sources later.  
-
-# In[7]:
-
-# Some cleaning:
-street.ix[street.Neighborhood == "Ocean View", "Neighborhood"] = "Oceanview"
 street.ix[street.Neighborhood == "None", "Neighborhood"] = np.nan
+street.ix[street.Neighborhood == "Ocean View", "Neighborhood"] = "Oceanview"
 street.ix[street.Neighborhood == "Downtown/Civic Center", "Neighborhood"] = "Civic Center"
 street.ix[street.Neighborhood == "St. Mary's Park", "Neighborhood"] = "St. Marys Park"
 street.ix[street.Neighborhood == "Presidio", "Neighborhood"] = "Presidio Heights"
 
-street.head()
 
+# Next we create a month column for future plots and data merging. 
 
-# In[8]:
+# In[6]:
 
 street['month'] = [timestamp.month for timestamp in street.Opened]
 
 
-# In[9]:
+# A look of the first few rows of our cleaned data:
+
+# In[7]:
 
 street.head()
 
 
-# # Scraping
+# We then exported the cleaned data set for use in the analysis notebook.
+
+# In[9]:
+
+# Export h5 for faster reading in later
+# Warning: the resulting file is about 600 MB
+street.to_hdf('street.h5','table',append=False)
+
+
+# # II. Scraping - Demographic Data
+
+# Here we scrape demographic data from the source talked about on our website.
 
 # In[10]:
 
-requests_cache.install_cache('sf_cache')
+requests_cache.install_cache('sf_cache') # So we don't make too many requests to the website
 
+
+# Grab the html from the website:
 
 # In[11]:
 
@@ -120,13 +114,20 @@ url = "http://www.city-data.com/nbmaps/neigh-San-Francisco-California.html"
 response = requests.get(url)
 response.raise_for_status
 
+
+# We first parse using Beautiful Soup and lxml. Then we grab the section with  what information we want for each neighborhood and store it as a list in neighborhood_divs. 
+
+# In[12]:
+
 neighborhoods_bs = BeautifulSoup(response.text, 'lxml')
 neighborhood_names = neighborhoods_bs.find_all(name = "span", attrs={'class':'street-name'})
 neighborhood_names = [name.text.replace("-", " ") for name in neighborhood_names]
 neighborhood_divs = neighborhoods_bs.body.find_all(name = "div", attrs={'class':'neighborhood'})
 
 
-# In[12]:
+# Then, parsing the html for each neighborhood was not as simple as we thought. The format the website used involved a lot of navigable strings. The title of each section like "Area" and "Population" was not nested nicely. The value for the Area was stored as a navigable string as a sibling to Area instead of a child, so the parsing process got a bit more complicated. The function catch() was created to handle three different cases of how far the sibling of information was from the title. It is called catch because if the case fails, then the value should be NA, so the function makes use of try and except. The function also deals with converting the strings to numbers and removing any commas and dollar signs than get in the way.
+
+# In[13]:
 
 def catch(line, number, simple, c = "h", complicated = False):
     """
@@ -136,23 +137,29 @@ def catch(line, number, simple, c = "h", complicated = False):
     is the c input variable. Complicated is for the last column we are scraping where finding that class is a bit more complicated.
     """
     try:
+        # Value should be converted to a number 
         if number == True:
+            # Case 1: value in the next sibling
             if simple == True:
-                return float(line[0].next_sibling.replace(",", "").replace("$", ""))
+                return float(line[0].next_sibling.replace(",", "").replace("$", "")) 
             
             else: 
+                # Case 2: When the website had a horizontal bar plot with two bars. c = h is the first bar and c = a is the second. 
                 if complicated == False:
                     return float(line[0].next_sibling.next_sibling.find_all(class_ = c)[0].next_sibling.replace(",", "").replace(" years", "").replace("$", ""))
+                # Case 3: Bar plot but with an extra line before the plot
                 else: 
                     return float(line[0].find_all_next(class_ = c)[0].next_sibling.replace(",", "").replace(" years", "").replace("$", ""))
 
         else:
             return line[0].next_sibling
     except:
-        return np.nan
+        return np.nan # If the line failed, then no value and want NA
 
 
-# In[13]:
+# We then created a demographic data frame with all the values we want to scrape stored as columns. For each one, one of the three cases is specified to the catch function and catch is also passed the find_all result of searching for the variable we want. Then the first few rows of the data frame are displayed. 
+
+# In[14]:
 
 demographic = pd.DataFrame({
         'Neighborhood': neighborhood_names, 
@@ -171,15 +178,19 @@ demographic = pd.DataFrame({
 demographic.head()
 
 
-# In[14]:
+# So now we have lots of demographic data on gender, age, area, rent, income, population, and so on. All of this data is from 2015. Next, the neighborhood names from this data need to be cleaned to match up with our primary data set. The CombineNeighs() function was created to take two rows of the demographic data and combine them, either taking the average of the two columns (like median age for example) or sums the columns (like population for example). This is necessary in a few cases seen in the next cell. One example is where the demographic data had "Bayview District" and "Bayview Heights" while our primary street data only had "Bayview."
+
+# In[15]:
 
 def CombineNeighs(name1, name2, newName, df):
     """
     This function takes in two neighborhood names of the demographic dataframe, combines them, 
     and changes the name.
     """
+    # Grab the two rows we want:
     one = df.ix[df.Neighborhood == name1]
     two = df.ix[df.Neighborhood == name2]
+    # Sum or average all the columns:
     one.loc[one.index, "AreaSqMi"] = (one['AreaSqMi'].values[0] + two['AreaSqMi'].values[0]) / 2
     one.loc[one.index, 'Females'] = one['Females'].values[0] + two['Females'].values[0]
     one.loc[one.index, 'HousePrice'] = (one['HousePrice'].values[0] + two['HousePrice'].values[0]) / 2
@@ -190,13 +201,15 @@ def CombineNeighs(name1, name2, newName, df):
     one.loc[one.index, 'PeoplePerSqMi'] = (one['PeoplePerSqMi'].values[0] + two['PeoplePerSqMi'].values[0]) / 2
     one.loc[one.index, 'Population'] = one['Population'].values[0] + two['Population'].values[0]   
     one.loc[one.index, 'Neighborhood'] = newName
+    # Drop the old rows:
     df = df.drop(one.index)
     df = df.drop(two.index)
+    # Add the new row:
     df = df.append(one)
     return df
 
 
-# In[15]:
+# In[16]:
 
 # Clean up neighborhood names: make the demographic names match our data and shapefiles
 demographic = CombineNeighs("Bayview District", "Bayview Heights", "Bayview", demographic)
@@ -209,7 +222,9 @@ demographic = CombineNeighs("Downtown", "Union Square", 'Downtown / Union Square
 demographic = CombineNeighs("Financial District", "Financial District South", "Financial District", demographic)
 
 
-# In[16]:
+# The next cleaning section includes cases where the name just needs to be changed.
+
+# In[17]:
 
 demographic.loc[demographic.Neighborhood == "Buena Vista Park", "Neighborhood"] = "Buena Vista"
 demographic.loc[demographic.Neighborhood == "Cayuga Terrace", "Neighborhood"] = "Cayuga"
@@ -229,16 +244,6 @@ demographic.loc[demographic.Neighborhood == "Mount Davidson Manor", "Neighborhoo
 demographic.loc[demographic.Neighborhood == "Lake", "Neighborhood"] = "Lake Street"
 
 
-# In[17]:
-
-# set(street.Neighborhood.unique()) - set(demographic.Neighborhood.unique())
-
-
-# In[18]:
-
-demographic
-
-
 # In[45]:
 
 # Export demographic here, then import in the other notebook and merge before plotting.  
@@ -247,7 +252,7 @@ demographic.to_csv("demographic.csv")
 
 # --------
 
-# ## Events and Festivals
+# # III. Scraping - Events and Festivals
 
 # In[20]:
 

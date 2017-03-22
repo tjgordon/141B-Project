@@ -11778,19 +11778,37 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Libraries">Libraries<a class="anchor-link" href="#Libraries">&#182;</a></h1>
+<h1 id="Reading,-Scraping,-and-Cleaning-Our-Data">Reading, Scraping, and Cleaning Our Data<a class="anchor-link" href="#Reading,-Scraping,-and-Cleaning-Our-Data">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This notebook shows our process of data munging in more detail.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Packages">Packages<a class="anchor-link" href="#Packages">&#182;</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Loading in data:</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="c1">#import feather</span>
 
 <span class="c1"># Parsing:</span>
 <span class="kn">import</span> <span class="nn">requests</span>
@@ -11811,7 +11829,17 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Reading-in-the-Data">Reading in the Data<a class="anchor-link" href="#Reading-in-the-Data">&#182;</a></h1>
+<h1 id="I.-Reading-in-the-Data---Our-Primary-Data-Source">I. Reading in the Data - Our Primary Data Source<a class="anchor-link" href="#I.-Reading-in-the-Data---Our-Primary-Data-Source">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The following cell loads are data through read_csv and takes a long time to run, about 15 minutes on our devices. We use street.h5 to import the data faster after importing the csv once here.</p>
+
 </div>
 </div>
 </div>
@@ -11820,15 +11848,16 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Warning: this cell takes a long time to run, about 15 minutes on our devices. </span>
-<span class="c1"># We use street.h5 (which can be created in the next cell) instead to import the data faster </span>
-<span class="c1"># after importing the csv once here.</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Should only run this cell the first time running this notebook:</span>
 
-<span class="c1"># Note: To just read in part add nrows =</span>
-<span class="n">parseDates</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Opened&quot;</span><span class="p">,</span> <span class="s2">&quot;Closed&quot;</span><span class="p">,</span> <span class="s2">&quot;Updated&quot;</span><span class="p">]</span> <span class="c1"># Convert these to datetimes</span>
+<span class="c1"># Convert these to datetimes</span>
+<span class="n">parseDates</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Opened&quot;</span><span class="p">,</span> <span class="s2">&quot;Closed&quot;</span><span class="p">,</span> <span class="s2">&quot;Updated&quot;</span><span class="p">]</span> 
 <span class="n">street_csv</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;Street_and_Sidewalk_Cleaning.csv&quot;</span><span class="p">,</span> 
                          <span class="c1">#nrows = 100000,</span>
                          <span class="n">parse_dates</span><span class="o">=</span><span class="n">parseDates</span><span class="p">)</span>
+
+<span class="c1"># Export h5 for faster reading in later</span>
+<span class="n">street</span><span class="o">.</span><span class="n">to_hdf</span><span class="p">(</span><span class="s1">&#39;street.h5&#39;</span><span class="p">,</span><span class="s1">&#39;table&#39;</span><span class="p">,</span><span class="n">append</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span> 
 </pre></div>
 
 </div>
@@ -11836,29 +11865,22 @@ div#notebook {
 </div>
 
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
 <div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Write feather</span>
-<span class="c1">#feather.write_dataframe(street_csv, &#39;street.feather&#39;)</span>
-
-<span class="c1"># Write h5</span>
-<span class="n">street</span><span class="o">.</span><span class="n">to_hdf</span><span class="p">(</span><span class="s1">&#39;street.h5&#39;</span><span class="p">,</span><span class="s1">&#39;table&#39;</span><span class="p">,</span><span class="n">append</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-</pre></div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The next cell loads the h5 and displays the first few rows of our primary data source. All of the variables can be seen here.</p>
 
 </div>
 </div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Katherine run only this</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Write h5: Run every second time and on of using this notebook</span>
 <span class="n">street_hdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">HDFStore</span><span class="p">(</span><span class="s1">&#39;street.h5&#39;</span><span class="p">)</span>
 <span class="n">street</span> <span class="o">=</span> <span class="n">street_hdf</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;/table&#39;</span><span class="p">)</span>
 <span class="n">street</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -11873,7 +11895,7 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[2]:</div>
+<div class="prompt output_prompt">Out[3]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -11995,41 +12017,62 @@ div#notebook {
 </div>
 
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
 <div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Read feather</span>
-<span class="c1">#street = feather.read_dataframe(&#39;street.feather&#39;)</span>
-</pre></div>
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Cleaning-the-data">Cleaning the data<a class="anchor-link" href="#Cleaning-the-data">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To keep counts of requests consistent over the months and days, we remove years with incomplete data since our original data set starts in November 2008 and ends in January 2017.</p>
 
 </div>
 </div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># To use the csv version</span>
-<span class="c1"># street = street_csv</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">street</span> <span class="o">=</span> <span class="n">street</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">street</span><span class="p">[</span><span class="s1">&#39;Opened&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span> <span class="o">!=</span> <span class="mi">2008</span><span class="p">]</span>
+<span class="n">street</span> <span class="o">=</span> <span class="n">street</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">street</span><span class="p">[</span><span class="s1">&#39;Opened&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span> <span class="o">!=</span> <span class="mi">2017</span><span class="p">]</span>
+<span class="n">street</span> <span class="o">=</span> <span class="n">street</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;Opened&quot;</span><span class="p">)</span> <span class="c1"># Re-sort data in date order</span>
+<span class="n">street</span> <span class="o">=</span> <span class="n">street</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span> <span class="c1"># Re-set the indexing</span>
+<span class="n">street</span> <span class="o">=</span> <span class="n">street</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># Get rid of old index column </span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Some neighborhood names need to be changed to allow merging with other data sources later and to match our shape files.</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Check if the binary version is equivalent</span>
-<span class="c1">#all(street == street_csv)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">street</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">street</span><span class="o">.</span><span class="n">Neighborhood</span> <span class="o">==</span> <span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="s2">&quot;Neighborhood&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="n">street</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">street</span><span class="o">.</span><span class="n">Neighborhood</span> <span class="o">==</span> <span class="s2">&quot;Ocean View&quot;</span><span class="p">,</span> <span class="s2">&quot;Neighborhood&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Oceanview&quot;</span>
+<span class="n">street</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">street</span><span class="o">.</span><span class="n">Neighborhood</span> <span class="o">==</span> <span class="s2">&quot;Downtown/Civic Center&quot;</span><span class="p">,</span> <span class="s2">&quot;Neighborhood&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Civic Center&quot;</span>
+<span class="n">street</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">street</span><span class="o">.</span><span class="n">Neighborhood</span> <span class="o">==</span> <span class="s2">&quot;St. Mary&#39;s Park&quot;</span><span class="p">,</span> <span class="s2">&quot;Neighborhood&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;St. Marys Park&quot;</span>
+<span class="n">street</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">street</span><span class="o">.</span><span class="n">Neighborhood</span> <span class="o">==</span> <span class="s2">&quot;Presidio&quot;</span><span class="p">,</span> <span class="s2">&quot;Neighborhood&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Presidio Heights&quot;</span>
 </pre></div>
 
 </div>
@@ -12042,16 +12085,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Cleaning-the-data">Cleaning the data<a class="anchor-link" href="#Cleaning-the-data">&#182;</a></h1>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>To keep counts of requests consistent over the months, we remove years with incomplete data.</p>
+<p>Next we create a month column for future plots and data merging.</p>
 
 </div>
 </div>
@@ -12059,180 +12093,6 @@ div#notebook {
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[6]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># TODO: Only use this subset for some analysis, since some major events are outside this range. </span>
-<span class="n">street</span> <span class="o">=</span> <span class="n">street</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">street</span><span class="p">[</span><span class="s1">&#39;Opened&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span> <span class="o">!=</span> <span class="mi">2008</span><span class="p">]</span>
-<span class="n">street</span> <span class="o">=</span> <span class="n">street</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">street</span><span class="p">[</span><span class="s1">&#39;Opened&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span> <span class="o">!=</span> <span class="mi">2017</span><span class="p">]</span>
-<span class="n">street</span> <span class="o">=</span> <span class="n">street</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;Opened&quot;</span><span class="p">)</span>
-<span class="n">street</span> <span class="o">=</span> <span class="n">street</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-<span class="n">street</span> <span class="o">=</span> <span class="n">street</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Some neighborhood names need to be changed to allow merging with other data sources later.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Some cleaning:</span>
-<span class="n">street</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">street</span><span class="o">.</span><span class="n">Neighborhood</span> <span class="o">==</span> <span class="s2">&quot;Ocean View&quot;</span><span class="p">,</span> <span class="s2">&quot;Neighborhood&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Oceanview&quot;</span>
-<span class="n">street</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">street</span><span class="o">.</span><span class="n">Neighborhood</span> <span class="o">==</span> <span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="s2">&quot;Neighborhood&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-<span class="n">street</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">street</span><span class="o">.</span><span class="n">Neighborhood</span> <span class="o">==</span> <span class="s2">&quot;Downtown/Civic Center&quot;</span><span class="p">,</span> <span class="s2">&quot;Neighborhood&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Civic Center&quot;</span>
-<span class="n">street</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">street</span><span class="o">.</span><span class="n">Neighborhood</span> <span class="o">==</span> <span class="s2">&quot;St. Mary&#39;s Park&quot;</span><span class="p">,</span> <span class="s2">&quot;Neighborhood&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;St. Marys Park&quot;</span>
-<span class="n">street</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">street</span><span class="o">.</span><span class="n">Neighborhood</span> <span class="o">==</span> <span class="s2">&quot;Presidio&quot;</span><span class="p">,</span> <span class="s2">&quot;Neighborhood&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Presidio Heights&quot;</span>
-
-<span class="n">street</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[7]:</div>
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>CaseID</th>
-      <th>Opened</th>
-      <th>Closed</th>
-      <th>Status</th>
-      <th>Responsible Agency</th>
-      <th>Address</th>
-      <th>Category</th>
-      <th>Request Type</th>
-      <th>Request Details</th>
-      <th>Source</th>
-      <th>Supervisor District</th>
-      <th>Neighborhood</th>
-      <th>Updated</th>
-      <th>Point</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>342509</td>
-      <td>2009-01-01 08:30:51</td>
-      <td>2009-01-01 11:07:06</td>
-      <td>Closed</td>
-      <td>DPW Ops Queue</td>
-      <td>Intersection of 13TH ST and FOLSOM ST</td>
-      <td>Street and Sidewalk Cleaning</td>
-      <td>Sidewalk_Cleaning</td>
-      <td>Encampment</td>
-      <td>Voice In</td>
-      <td>6.0</td>
-      <td>Mission</td>
-      <td>2009-01-01 11:07:06</td>
-      <td>(37.7695911772607, -122.415577110949)</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>342510</td>
-      <td>2009-01-01 08:33:46</td>
-      <td>2009-01-01 11:07:06</td>
-      <td>Closed</td>
-      <td>DPW Ops Queue</td>
-      <td>Intersection of 13TH ST and FOLSOM ST</td>
-      <td>Street and Sidewalk Cleaning</td>
-      <td>Sidewalk_Cleaning</td>
-      <td>Debris_filled_carts</td>
-      <td>Voice In</td>
-      <td>6.0</td>
-      <td>Mission</td>
-      <td>2009-01-01 11:07:06</td>
-      <td>(37.7695911772607, -122.415577110949)</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>342512</td>
-      <td>2009-01-01 08:44:54</td>
-      <td>2009-01-31 13:09:53</td>
-      <td>Closed</td>
-      <td>DPW Ops Queue</td>
-      <td>467 FILLMORE ST, SAN FRANCISCO, CA, 94117</td>
-      <td>Street and Sidewalk Cleaning</td>
-      <td>Street_Cleaning</td>
-      <td>Glass</td>
-      <td>Voice In</td>
-      <td>5.0</td>
-      <td>Western Addition</td>
-      <td>2009-01-31 13:09:53</td>
-      <td>(37.773807246, -122.431027495)</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>342514</td>
-      <td>2009-01-01 09:13:07</td>
-      <td>2009-01-01 11:07:06</td>
-      <td>Closed</td>
-      <td>DPW Ops Queue</td>
-      <td>Intersection of DWIGHT ST and GOETTINGEN ST</td>
-      <td>Street and Sidewalk Cleaning</td>
-      <td>Sidewalk_Cleaning</td>
-      <td>Garbage</td>
-      <td>Voice In</td>
-      <td>9.0</td>
-      <td>Excelsior</td>
-      <td>2009-01-01 11:07:06</td>
-      <td>(37.7232896018615, -122.405086927628)</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>342519</td>
-      <td>2009-01-01 09:21:05</td>
-      <td>2009-01-21 06:07:13</td>
-      <td>Closed</td>
-      <td>DPW Ops Queue</td>
-      <td>1610 MCALLISTER ST, SAN FRANCISCO, CA, 94115</td>
-      <td>Street and Sidewalk Cleaning</td>
-      <td>Sidewalk_Cleaning</td>
-      <td>Human_waste_or_urine</td>
-      <td>Voice In</td>
-      <td>5.0</td>
-      <td>Western Addition</td>
-      <td>2009-01-21 06:07:13</td>
-      <td>(37.777956377, -122.43893262)</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">street</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">timestamp</span><span class="o">.</span><span class="n">month</span> <span class="k">for</span> <span class="n">timestamp</span> <span class="ow">in</span> <span class="n">street</span><span class="o">.</span><span class="n">Opened</span><span class="p">]</span>
@@ -12243,9 +12103,19 @@ div#notebook {
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A look of the first few rows of our cleaned data:</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">street</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -12260,7 +12130,7 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[9]:</div>
+<div class="prompt output_prompt">Out[7]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -12393,7 +12263,42 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Scraping">Scraping<a class="anchor-link" href="#Scraping">&#182;</a></h1>
+<p>We then exported the cleaned data set for use in the analysis notebook.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Export h5 for faster reading in later</span>
+<span class="c1"># Warning: the resulting file is about 600 MB</span>
+<span class="n">street</span><span class="o">.</span><span class="n">to_hdf</span><span class="p">(</span><span class="s1">&#39;street.h5&#39;</span><span class="p">,</span><span class="s1">&#39;table&#39;</span><span class="p">,</span><span class="n">append</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="II.-Scraping---Demographic-Data">II. Scraping - Demographic Data<a class="anchor-link" href="#II.-Scraping---Demographic-Data">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here we scrape demographic data from the source talked about on our website.</p>
+
 </div>
 </div>
 </div>
@@ -12402,13 +12307,23 @@ div#notebook {
 <div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">requests_cache</span><span class="o">.</span><span class="n">install_cache</span><span class="p">(</span><span class="s1">&#39;sf_cache&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">requests_cache</span><span class="o">.</span><span class="n">install_cache</span><span class="p">(</span><span class="s1">&#39;sf_cache&#39;</span><span class="p">)</span> <span class="c1"># So we don&#39;t make too many requests to the website</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Grab the html from the website:</p>
+
+</div>
+</div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -12418,8 +12333,47 @@ div#notebook {
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://www.city-data.com/nbmaps/neigh-San-Francisco-California.html&quot;</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
 <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span>
+</pre></div>
 
-<span class="n">neighborhoods_bs</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s1">&#39;lxml&#39;</span><span class="p">)</span>
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+<div class="prompt output_prompt">Out[11]:</div>
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&lt;bound method Response.raise_for_status of &lt;Response [200]&gt;&gt;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We first parse using Beautiful Soup and lxml. Then we grab the section with  what information we want for each neighborhood and store it as a list in neighborhood_divs.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">neighborhoods_bs</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s1">&#39;lxml&#39;</span><span class="p">)</span>
 <span class="n">neighborhood_names</span> <span class="o">=</span> <span class="n">neighborhoods_bs</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span><span class="s1">&#39;street-name&#39;</span><span class="p">})</span>
 <span class="n">neighborhood_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">neighborhood_names</span><span class="p">]</span>
 <span class="n">neighborhood_divs</span> <span class="o">=</span> <span class="n">neighborhoods_bs</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;div&quot;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span><span class="s1">&#39;neighborhood&#39;</span><span class="p">})</span>
@@ -12430,9 +12384,19 @@ div#notebook {
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Then, parsing the html for each neighborhood was not as simple as we thought. The format the website used involved a lot of navigable strings. The title of each section like "Area" and "Population" was not nested nicely. The value for the Area was stored as a navigable string as a sibling to Area instead of a child, so the parsing process got a bit more complicated. The function catch() was created to handle three different cases of how far the sibling of information was from the title. It is called catch because if the case fails, then the value should be NA, so the function makes use of try and except. The function also deals with converting the strings to numbers and removing any commas and dollar signs than get in the way.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">catch</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">number</span><span class="p">,</span> <span class="n">simple</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="n">complicated</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
@@ -12443,20 +12407,24 @@ div#notebook {
 <span class="sd">    is the c input variable. Complicated is for the last column we are scraping where finding that class is a bit more complicated.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Value should be converted to a number </span>
         <span class="k">if</span> <span class="n">number</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="c1"># Case 1: value in the next sibling</span>
             <span class="k">if</span> <span class="n">simple</span> <span class="o">==</span> <span class="bp">True</span><span class="p">:</span>
-                <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">next_sibling</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+                <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">next_sibling</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span> 
             
             <span class="k">else</span><span class="p">:</span> 
+                <span class="c1"># Case 2: When the website had a horizontal bar plot with two bars. c = h is the first bar and c = a is the second. </span>
                 <span class="k">if</span> <span class="n">complicated</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>
                     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">next_sibling</span><span class="o">.</span><span class="n">next_sibling</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="n">class_</span> <span class="o">=</span> <span class="n">c</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">next_sibling</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; years&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+                <span class="c1"># Case 3: Bar plot but with an extra line before the plot</span>
                 <span class="k">else</span><span class="p">:</span> 
                     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">find_all_next</span><span class="p">(</span><span class="n">class_</span> <span class="o">=</span> <span class="n">c</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">next_sibling</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; years&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">next_sibling</span>
     <span class="k">except</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="c1"># If the line failed, then no value and want NA</span>
 </pre></div>
 
 </div>
@@ -12464,9 +12432,19 @@ div#notebook {
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We then created a demographic data frame with all the values we want to scrape stored as columns. For each one, one of the three cases is specified to the catch function and catch is also passed the find_all result of searching for the variable we want. Then the first few rows of the data frame are displayed.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">demographic</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
@@ -12495,7 +12473,7 @@ div#notebook {
 
 
 <div class="output_area">
-<div class="prompt output_prompt">Out[13]:</div>
+<div class="prompt output_prompt">Out[14]:</div>
 
 
 <div class="output_html rendered_html output_subarea output_execute_result">
@@ -12599,9 +12577,19 @@ div#notebook {
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So now we have lots of demographic data on gender, age, area, rent, income, population, and so on. All of this data is from 2015. Next, the neighborhood names from this data need to be cleaned to match up with our primary data set. The CombineNeighs() function was created to take two rows of the demographic data and combine them, either taking the average of the two columns (like median age for example) or sums the columns (like population for example). This is necessary in a few cases seen in the next cell. One example is where the demographic data had "Bayview District" and "Bayview Heights" while our primary street data only had "Bayview."</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">CombineNeighs</span><span class="p">(</span><span class="n">name1</span><span class="p">,</span> <span class="n">name2</span><span class="p">,</span> <span class="n">newName</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
@@ -12609,8 +12597,10 @@ div#notebook {
 <span class="sd">    This function takes in two neighborhood names of the demographic dataframe, combines them, </span>
 <span class="sd">    and changes the name.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Grab the two rows we want:</span>
     <span class="n">one</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">Neighborhood</span> <span class="o">==</span> <span class="n">name1</span><span class="p">]</span>
     <span class="n">two</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">Neighborhood</span> <span class="o">==</span> <span class="n">name2</span><span class="p">]</span>
+    <span class="c1"># Sum or average all the columns:</span>
     <span class="n">one</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">one</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s2">&quot;AreaSqMi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">one</span><span class="p">[</span><span class="s1">&#39;AreaSqMi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">two</span><span class="p">[</span><span class="s1">&#39;AreaSqMi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
     <span class="n">one</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">one</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;Females&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">one</span><span class="p">[</span><span class="s1">&#39;Females&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">two</span><span class="p">[</span><span class="s1">&#39;Females&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">one</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">one</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;HousePrice&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">one</span><span class="p">[</span><span class="s1">&#39;HousePrice&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">two</span><span class="p">[</span><span class="s1">&#39;HousePrice&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
@@ -12621,8 +12611,10 @@ div#notebook {
     <span class="n">one</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">one</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;PeoplePerSqMi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">one</span><span class="p">[</span><span class="s1">&#39;PeoplePerSqMi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">two</span><span class="p">[</span><span class="s1">&#39;PeoplePerSqMi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
     <span class="n">one</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">one</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;Population&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">one</span><span class="p">[</span><span class="s1">&#39;Population&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">two</span><span class="p">[</span><span class="s1">&#39;Population&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>   
     <span class="n">one</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">one</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;Neighborhood&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">newName</span>
+    <span class="c1"># Drop the old rows:</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">one</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">two</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="c1"># Add the new row:</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">one</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">df</span>
 </pre></div>
@@ -12634,7 +12626,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Clean up neighborhood names: make the demographic names match our data and shapefiles</span>
@@ -12660,7 +12652,7 @@ div#notebook {
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>/home/tgordon/.local/lib/python2.7/site-packages/pandas/core/indexing.py:477: SettingWithCopyWarning: 
+<pre>C:\ProgramData\Anaconda2\lib\site-packages\pandas\core\indexing.py:477: SettingWithCopyWarning: 
 A value is trying to be set on a copy of a slice from a DataFrame.
 Try using .loc[row_indexer,col_indexer] = value instead
 
@@ -12674,9 +12666,19 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The next cleaning section includes cases where the name just needs to be changed.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">demographic</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">demographic</span><span class="o">.</span><span class="n">Neighborhood</span> <span class="o">==</span> <span class="s2">&quot;Buena Vista Park&quot;</span><span class="p">,</span> <span class="s2">&quot;Neighborhood&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Buena Vista&quot;</span>
@@ -12698,925 +12700,6 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </pre></div>
 
 </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># set(street.Neighborhood.unique()) - set(demographic.Neighborhood.unique())</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">demographic</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[18]:</div>
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>AreaSqMi</th>
-      <th>Females</th>
-      <th>HousePrice</th>
-      <th>Males</th>
-      <th>MedAgeF</th>
-      <th>MedAgeM</th>
-      <th>MedHouseholdIncome</th>
-      <th>MedRent</th>
-      <th>Neighborhood</th>
-      <th>PeoplePerSqMi</th>
-      <th>Population</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0.1440</td>
-      <td>2461.0</td>
-      <td>1988926.0</td>
-      <td>3916.0</td>
-      <td>38.600</td>
-      <td>35.40</td>
-      <td>93901.0</td>
-      <td>1754.0</td>
-      <td>Alamo Square</td>
-      <td>44418.00</td>
-      <td>6379.0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>0.1240</td>
-      <td>944.0</td>
-      <td>455053.0</td>
-      <td>1177.0</td>
-      <td>38.900</td>
-      <td>41.20</td>
-      <td>104697.0</td>
-      <td>1937.0</td>
-      <td>Anza Vista</td>
-      <td>17080.00</td>
-      <td>2122.0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0.0550</td>
-      <td>774.0</td>
-      <td>NaN</td>
-      <td>1365.0</td>
-      <td>35.200</td>
-      <td>35.10</td>
-      <td>134523.0</td>
-      <td>2489.0</td>
-      <td>Baja Noe</td>
-      <td>38816.00</td>
-      <td>2141.0</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>0.1380</td>
-      <td>1009.0</td>
-      <td>1423695.0</td>
-      <td>1492.0</td>
-      <td>39.400</td>
-      <td>41.70</td>
-      <td>144714.0</td>
-      <td>1813.0</td>
-      <td>Buena Vista</td>
-      <td>18167.00</td>
-      <td>2502.0</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td>0.5260</td>
-      <td>5261.0</td>
-      <td>1843918.0</td>
-      <td>7671.0</td>
-      <td>38.400</td>
-      <td>41.70</td>
-      <td>142771.0</td>
-      <td>1946.0</td>
-      <td>Castro</td>
-      <td>24605.00</td>
-      <td>12935.0</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>0.0950</td>
-      <td>1446.0</td>
-      <td>NaN</td>
-      <td>1510.0</td>
-      <td>58.100</td>
-      <td>47.30</td>
-      <td>64491.0</td>
-      <td>1383.0</td>
-      <td>Cathedral Hill</td>
-      <td>31073.00</td>
-      <td>2956.0</td>
-    </tr>
-    <tr>
-      <th>15</th>
-      <td>0.1920</td>
-      <td>2745.0</td>
-      <td>1040534.0</td>
-      <td>2383.0</td>
-      <td>45.300</td>
-      <td>39.60</td>
-      <td>75063.0</td>
-      <td>1517.0</td>
-      <td>Cayuga</td>
-      <td>26690.00</td>
-      <td>5128.0</td>
-    </tr>
-    <tr>
-      <th>16</th>
-      <td>0.8580</td>
-      <td>13534.0</td>
-      <td>778920.0</td>
-      <td>12590.0</td>
-      <td>46.400</td>
-      <td>40.00</td>
-      <td>79040.0</td>
-      <td>1732.0</td>
-      <td>Central Richmond</td>
-      <td>30442.00</td>
-      <td>26124.0</td>
-    </tr>
-    <tr>
-      <th>17</th>
-      <td>0.9340</td>
-      <td>11010.0</td>
-      <td>855173.0</td>
-      <td>9564.0</td>
-      <td>42.700</td>
-      <td>40.60</td>
-      <td>120276.0</td>
-      <td>1864.0</td>
-      <td>Central Sunset</td>
-      <td>22023.00</td>
-      <td>20573.0</td>
-    </tr>
-    <tr>
-      <th>18</th>
-      <td>0.1680</td>
-      <td>4496.0</td>
-      <td>NaN</td>
-      <td>4703.0</td>
-      <td>49.400</td>
-      <td>43.70</td>
-      <td>33769.0</td>
-      <td>689.0</td>
-      <td>Chinatown</td>
-      <td>54745.00</td>
-      <td>9200.0</td>
-    </tr>
-    <tr>
-      <th>19</th>
-      <td>0.3910</td>
-      <td>6382.0</td>
-      <td>NaN</td>
-      <td>7892.0</td>
-      <td>44.700</td>
-      <td>42.60</td>
-      <td>64841.0</td>
-      <td>1488.0</td>
-      <td>Civic Center</td>
-      <td>36530.00</td>
-      <td>14275.0</td>
-    </tr>
-    <tr>
-      <th>20</th>
-      <td>0.0820</td>
-      <td>418.0</td>
-      <td>1733982.0</td>
-      <td>378.0</td>
-      <td>36.400</td>
-      <td>36.70</td>
-      <td>149457.0</td>
-      <td>2086.0</td>
-      <td>Clarendon Heights</td>
-      <td>9663.00</td>
-      <td>797.0</td>
-    </tr>
-    <tr>
-      <th>21</th>
-      <td>0.1350</td>
-      <td>1459.0</td>
-      <td>1687465.0</td>
-      <td>1720.0</td>
-      <td>33.300</td>
-      <td>33.80</td>
-      <td>132685.0</td>
-      <td>1910.0</td>
-      <td>Cole Valley</td>
-      <td>23630.00</td>
-      <td>3180.0</td>
-    </tr>
-    <tr>
-      <th>22</th>
-      <td>0.1740</td>
-      <td>1554.0</td>
-      <td>1414903.0</td>
-      <td>2490.0</td>
-      <td>39.700</td>
-      <td>44.60</td>
-      <td>151866.0</td>
-      <td>2167.0</td>
-      <td>Corona Heights</td>
-      <td>23199.00</td>
-      <td>4046.0</td>
-    </tr>
-    <tr>
-      <th>23</th>
-      <td>0.2820</td>
-      <td>4328.0</td>
-      <td>2473001.0</td>
-      <td>3728.0</td>
-      <td>41.900</td>
-      <td>41.90</td>
-      <td>203845.0</td>
-      <td>2810.0</td>
-      <td>Cow Hollow</td>
-      <td>28546.00</td>
-      <td>8056.0</td>
-    </tr>
-    <tr>
-      <th>24</th>
-      <td>0.4510</td>
-      <td>4906.0</td>
-      <td>789972.0</td>
-      <td>4524.0</td>
-      <td>46.600</td>
-      <td>40.70</td>
-      <td>77157.0</td>
-      <td>1346.0</td>
-      <td>Crocker Amazon</td>
-      <td>20891.00</td>
-      <td>9430.0</td>
-    </tr>
-    <tr>
-      <th>25</th>
-      <td>0.0730</td>
-      <td>904.0</td>
-      <td>NaN</td>
-      <td>1412.0</td>
-      <td>36.800</td>
-      <td>35.30</td>
-      <td>78240.0</td>
-      <td>1509.0</td>
-      <td>Deco Ghetto</td>
-      <td>31621.00</td>
-      <td>2317.0</td>
-    </tr>
-    <tr>
-      <th>26</th>
-      <td>0.3470</td>
-      <td>966.0</td>
-      <td>1240077.0</td>
-      <td>1066.0</td>
-      <td>50.100</td>
-      <td>47.50</td>
-      <td>132299.0</td>
-      <td>1733.0</td>
-      <td>Diamond Heights</td>
-      <td>5862.00</td>
-      <td>2032.0</td>
-    </tr>
-    <tr>
-      <th>27</th>
-      <td>0.1750</td>
-      <td>603.0</td>
-      <td>NaN</td>
-      <td>701.0</td>
-      <td>37.400</td>
-      <td>37.60</td>
-      <td>190988.0</td>
-      <td>2894.0</td>
-      <td>Dogpatch</td>
-      <td>7444.00</td>
-      <td>1305.0</td>
-    </tr>
-    <tr>
-      <th>29</th>
-      <td>0.1410</td>
-      <td>1348.0</td>
-      <td>2616469.0</td>
-      <td>2417.0</td>
-      <td>37.000</td>
-      <td>42.20</td>
-      <td>135035.0</td>
-      <td>1698.0</td>
-      <td>Duboce Triangle</td>
-      <td>26679.00</td>
-      <td>3767.0</td>
-    </tr>
-    <tr>
-      <th>30</th>
-      <td>0.2800</td>
-      <td>843.0</td>
-      <td>NaN</td>
-      <td>906.0</td>
-      <td>45.300</td>
-      <td>42.60</td>
-      <td>94336.0</td>
-      <td>1934.0</td>
-      <td>Embarcadero</td>
-      <td>6242.00</td>
-      <td>1750.0</td>
-    </tr>
-    <tr>
-      <th>31</th>
-      <td>1.0730</td>
-      <td>16907.0</td>
-      <td>570545.0</td>
-      <td>17096.0</td>
-      <td>44.700</td>
-      <td>40.90</td>
-      <td>79346.0</td>
-      <td>1611.0</td>
-      <td>Excelsior</td>
-      <td>31684.00</td>
-      <td>34003.0</td>
-    </tr>
-    <tr>
-      <th>34</th>
-      <td>0.2220</td>
-      <td>447.0</td>
-      <td>3138999.0</td>
-      <td>515.0</td>
-      <td>50.200</td>
-      <td>41.10</td>
-      <td>98920.0</td>
-      <td>2048.0</td>
-      <td>Fisherman's Wharf</td>
-      <td>4343.00</td>
-      <td>962.0</td>
-    </tr>
-    <tr>
-      <th>35</th>
-      <td>0.2850</td>
-      <td>1810.0</td>
-      <td>1547069.0</td>
-      <td>1780.0</td>
-      <td>49.500</td>
-      <td>46.60</td>
-      <td>169744.0</td>
-      <td>1999.0</td>
-      <td>Forest Hill</td>
-      <td>12603.00</td>
-      <td>3590.0</td>
-    </tr>
-    <tr>
-      <th>36</th>
-      <td>0.3340</td>
-      <td>1620.0</td>
-      <td>1165540.0</td>
-      <td>1598.0</td>
-      <td>46.300</td>
-      <td>42.50</td>
-      <td>120245.0</td>
-      <td>2048.0</td>
-      <td>Forest Knolls</td>
-      <td>9642.00</td>
-      <td>3218.0</td>
-    </tr>
-    <tr>
-      <th>38</th>
-      <td>0.0020</td>
-      <td>6.0</td>
-      <td>NaN</td>
-      <td>8.0</td>
-      <td>40.100</td>
-      <td>44.60</td>
-      <td>37014.0</td>
-      <td>782.0</td>
-      <td>French Quarter</td>
-      <td>7908.00</td>
-      <td>14.0</td>
-    </tr>
-    <tr>
-      <th>39</th>
-      <td>0.0050</td>
-      <td>61.0</td>
-      <td>3673981.0</td>
-      <td>61.0</td>
-      <td>48.200</td>
-      <td>48.40</td>
-      <td>139017.0</td>
-      <td>2209.0</td>
-      <td>Ghirardelli Square</td>
-      <td>22707.00</td>
-      <td>123.0</td>
-    </tr>
-    <tr>
-      <th>40</th>
-      <td>0.3850</td>
-      <td>2964.0</td>
-      <td>1217642.0</td>
-      <td>3138.0</td>
-      <td>40.500</td>
-      <td>40.40</td>
-      <td>113197.0</td>
-      <td>2189.0</td>
-      <td>Glen Park</td>
-      <td>15847.00</td>
-      <td>6103.0</td>
-    </tr>
-    <tr>
-      <th>41</th>
-      <td>0.1620</td>
-      <td>1579.0</td>
-      <td>1043328.0</td>
-      <td>1561.0</td>
-      <td>44.000</td>
-      <td>42.90</td>
-      <td>153817.0</td>
-      <td>1895.0</td>
-      <td>Golden Gate Heights</td>
-      <td>19419.00</td>
-      <td>3141.0</td>
-    </tr>
-    <tr>
-      <th>42</th>
-      <td>1.6350</td>
-      <td>67.0</td>
-      <td>9235775.0</td>
-      <td>58.0</td>
-      <td>37.900</td>
-      <td>37.70</td>
-      <td>57937.0</td>
-      <td>1303.0</td>
-      <td>Golden Gate Park</td>
-      <td>76.00</td>
-      <td>125.0</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>122</th>
-      <td>0.0110</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>South Park</td>
-      <td>NaN</td>
-      <td>NaN</td>
-    </tr>
-    <tr>
-      <th>123</th>
-      <td>0.0220</td>
-      <td>307.0</td>
-      <td>871471.0</td>
-      <td>304.0</td>
-      <td>36.600</td>
-      <td>36.40</td>
-      <td>83831.0</td>
-      <td>733.0</td>
-      <td>St. Marys Park</td>
-      <td>27414.00</td>
-      <td>611.0</td>
-    </tr>
-    <tr>
-      <th>124</th>
-      <td>0.5900</td>
-      <td>3737.0</td>
-      <td>NaN</td>
-      <td>2400.0</td>
-      <td>29.500</td>
-      <td>29.90</td>
-      <td>40799.0</td>
-      <td>1817.0</td>
-      <td>Stonestown</td>
-      <td>10392.00</td>
-      <td>6136.0</td>
-    </tr>
-    <tr>
-      <th>125</th>
-      <td>0.1520</td>
-      <td>2833.0</td>
-      <td>635300.0</td>
-      <td>2195.0</td>
-      <td>42.500</td>
-      <td>37.60</td>
-      <td>58361.0</td>
-      <td>631.0</td>
-      <td>Sunnydale</td>
-      <td>33062.00</td>
-      <td>5028.0</td>
-    </tr>
-    <tr>
-      <th>126</th>
-      <td>0.5130</td>
-      <td>4069.0</td>
-      <td>864042.0</td>
-      <td>4244.0</td>
-      <td>44.500</td>
-      <td>43.10</td>
-      <td>125463.0</td>
-      <td>2116.0</td>
-      <td>Sunnyside</td>
-      <td>16196.00</td>
-      <td>8313.0</td>
-    </tr>
-    <tr>
-      <th>127</th>
-      <td>4.5350</td>
-      <td>47689.0</td>
-      <td>842910.0</td>
-      <td>42659.0</td>
-      <td>42.700</td>
-      <td>41.90</td>
-      <td>111999.0</td>
-      <td>1721.0</td>
-      <td>Sunset District</td>
-      <td>19923.00</td>
-      <td>90343.0</td>
-    </tr>
-    <tr>
-      <th>128</th>
-      <td>0.0760</td>
-      <td>816.0</td>
-      <td>848583.0</td>
-      <td>777.0</td>
-      <td>46.100</td>
-      <td>39.80</td>
-      <td>86385.0</td>
-      <td>1642.0</td>
-      <td>Sutro Heights</td>
-      <td>21111.00</td>
-      <td>1594.0</td>
-    </tr>
-    <tr>
-      <th>129</th>
-      <td>0.1710</td>
-      <td>3467.0</td>
-      <td>2376846.0</td>
-      <td>3722.0</td>
-      <td>46.800</td>
-      <td>38.20</td>
-      <td>75049.0</td>
-      <td>1828.0</td>
-      <td>Telegraph Hill</td>
-      <td>42154.00</td>
-      <td>7190.0</td>
-    </tr>
-    <tr>
-      <th>130</th>
-      <td>0.2780</td>
-      <td>3860.0</td>
-      <td>NaN</td>
-      <td>5149.0</td>
-      <td>43.600</td>
-      <td>41.90</td>
-      <td>15405.0</td>
-      <td>924.0</td>
-      <td>Tenderloin</td>
-      <td>32459.00</td>
-      <td>9011.0</td>
-    </tr>
-    <tr>
-      <th>131</th>
-      <td>0.0670</td>
-      <td>817.0</td>
-      <td>NaN</td>
-      <td>1276.0</td>
-      <td>36.600</td>
-      <td>36.40</td>
-      <td>78240.0</td>
-      <td>1499.0</td>
-      <td>The Hub</td>
-      <td>31082.00</td>
-      <td>2094.0</td>
-    </tr>
-    <tr>
-      <th>132</th>
-      <td>0.0900</td>
-      <td>1572.0</td>
-      <td>866523.0</td>
-      <td>1593.0</td>
-      <td>44.100</td>
-      <td>42.90</td>
-      <td>125730.0</td>
-      <td>1796.0</td>
-      <td>Transmission</td>
-      <td>35305.00</td>
-      <td>3165.0</td>
-    </tr>
-    <tr>
-      <th>133</th>
-      <td>0.6570</td>
-      <td>20.0</td>
-      <td>NaN</td>
-      <td>23.0</td>
-      <td>26.900</td>
-      <td>25.20</td>
-      <td>46185.0</td>
-      <td>1860.0</td>
-      <td>Treasure Island</td>
-      <td>67.00</td>
-      <td>44.0</td>
-    </tr>
-    <tr>
-      <th>134</th>
-      <td>0.1980</td>
-      <td>940.0</td>
-      <td>1747113.0</td>
-      <td>1112.0</td>
-      <td>40.800</td>
-      <td>42.40</td>
-      <td>171840.0</td>
-      <td>2376.0</td>
-      <td>Twin Peaks</td>
-      <td>10359.00</td>
-      <td>2052.0</td>
-    </tr>
-    <tr>
-      <th>135</th>
-      <td>4.0640</td>
-      <td>21625.0</td>
-      <td>1235172.0</td>
-      <td>22837.0</td>
-      <td>46.100</td>
-      <td>44.10</td>
-      <td>141441.0</td>
-      <td>2353.0</td>
-      <td>Twin Peaks West</td>
-      <td>10940.00</td>
-      <td>44463.0</td>
-    </tr>
-    <tr>
-      <th>137</th>
-      <td>0.1290</td>
-      <td>351.0</td>
-      <td>885339.0</td>
-      <td>347.0</td>
-      <td>43.100</td>
-      <td>44.80</td>
-      <td>139706.0</td>
-      <td>2770.0</td>
-      <td>Upper Market</td>
-      <td>5391.00</td>
-      <td>698.0</td>
-    </tr>
-    <tr>
-      <th>138</th>
-      <td>0.3760</td>
-      <td>6033.0</td>
-      <td>NaN</td>
-      <td>7456.0</td>
-      <td>44.700</td>
-      <td>42.60</td>
-      <td>64841.0</td>
-      <td>1497.0</td>
-      <td>Van Ness</td>
-      <td>35892.00</td>
-      <td>13490.0</td>
-    </tr>
-    <tr>
-      <th>139</th>
-      <td>1.2580</td>
-      <td>16406.0</td>
-      <td>553333.0</td>
-      <td>15072.0</td>
-      <td>42.400</td>
-      <td>39.00</td>
-      <td>71479.0</td>
-      <td>1192.0</td>
-      <td>Visitacion Valley</td>
-      <td>25031.00</td>
-      <td>31477.0</td>
-    </tr>
-    <tr>
-      <th>140</th>
-      <td>0.2260</td>
-      <td>1606.0</td>
-      <td>1194256.0</td>
-      <td>1583.0</td>
-      <td>46.800</td>
-      <td>44.90</td>
-      <td>165594.0</td>
-      <td>2735.0</td>
-      <td>West Portal</td>
-      <td>14088.00</td>
-      <td>3189.0</td>
-    </tr>
-    <tr>
-      <th>141</th>
-      <td>0.4650</td>
-      <td>2309.0</td>
-      <td>1260399.0</td>
-      <td>2511.0</td>
-      <td>49.700</td>
-      <td>47.20</td>
-      <td>168297.0</td>
-      <td>2488.0</td>
-      <td>West of Twin Peaks</td>
-      <td>10368.00</td>
-      <td>4821.0</td>
-    </tr>
-    <tr>
-      <th>142</th>
-      <td>0.3680</td>
-      <td>7563.0</td>
-      <td>1334029.0</td>
-      <td>6883.0</td>
-      <td>47.900</td>
-      <td>39.60</td>
-      <td>66992.0</td>
-      <td>1139.0</td>
-      <td>Western Addition</td>
-      <td>39272.00</td>
-      <td>14446.0</td>
-    </tr>
-    <tr>
-      <th>143</th>
-      <td>0.1420</td>
-      <td>861.0</td>
-      <td>905487.0</td>
-      <td>896.0</td>
-      <td>46.200</td>
-      <td>44.20</td>
-      <td>138202.0</td>
-      <td>2666.0</td>
-      <td>Westwood Highlands</td>
-      <td>12390.00</td>
-      <td>1757.0</td>
-    </tr>
-    <tr>
-      <th>144</th>
-      <td>0.1980</td>
-      <td>1139.0</td>
-      <td>892715.0</td>
-      <td>1125.0</td>
-      <td>49.700</td>
-      <td>45.80</td>
-      <td>133799.0</td>
-      <td>2335.0</td>
-      <td>Westwood Park</td>
-      <td>11438.00</td>
-      <td>2264.0</td>
-    </tr>
-    <tr>
-      <th>145</th>
-      <td>0.2450</td>
-      <td>7.0</td>
-      <td>NaN</td>
-      <td>8.0</td>
-      <td>26.900</td>
-      <td>25.20</td>
-      <td>46185.0</td>
-      <td>1860.0</td>
-      <td>Yerba Buena Island</td>
-      <td>65.00</td>
-      <td>16.0</td>
-    </tr>
-    <tr>
-      <th>146</th>
-      <td>0.2400</td>
-      <td>3592.0</td>
-      <td>1615729.0</td>
-      <td>3422.0</td>
-      <td>37.900</td>
-      <td>38.40</td>
-      <td>102405.0</td>
-      <td>1933.0</td>
-      <td>Zion District</td>
-      <td>29235.00</td>
-      <td>7015.0</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>1.3480</td>
-      <td>14934.0</td>
-      <td>512311.5</td>
-      <td>14463.0</td>
-      <td>38.650</td>
-      <td>36.00</td>
-      <td>70726.0</td>
-      <td>1188.0</td>
-      <td>Bayview</td>
-      <td>9110.50</td>
-      <td>29398.0</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>0.5310</td>
-      <td>25097.0</td>
-      <td>974149.5</td>
-      <td>25997.0</td>
-      <td>39.125</td>
-      <td>38.35</td>
-      <td>123137.5</td>
-      <td>1978.0</td>
-      <td>Bernal Heights</td>
-      <td>21183.25</td>
-      <td>51096.0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>0.0700</td>
-      <td>657.0</td>
-      <td>NaN</td>
-      <td>732.0</td>
-      <td>47.050</td>
-      <td>43.05</td>
-      <td>131137.0</td>
-      <td>1591.0</td>
-      <td>Balboa Terrace</td>
-      <td>10973.00</td>
-      <td>1391.0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0.0845</td>
-      <td>1187.0</td>
-      <td>1428458.0</td>
-      <td>1304.0</td>
-      <td>48.200</td>
-      <td>48.40</td>
-      <td>139017.0</td>
-      <td>2014.0</td>
-      <td>Aquatic Park / Ft. Mason</td>
-      <td>11788.00</td>
-      <td>2492.0</td>
-    </tr>
-    <tr>
-      <th>28</th>
-      <td>0.1720</td>
-      <td>8029.0</td>
-      <td>NaN</td>
-      <td>9334.0</td>
-      <td>34.700</td>
-      <td>39.30</td>
-      <td>45761.5</td>
-      <td>1298.0</td>
-      <td>Downtown / Union Square</td>
-      <td>29654.00</td>
-      <td>17364.0</td>
-    </tr>
-    <tr>
-      <th>32</th>
-      <td>0.5060</td>
-      <td>5602.0</td>
-      <td>NaN</td>
-      <td>8189.0</td>
-      <td>46.350</td>
-      <td>43.65</td>
-      <td>63703.0</td>
-      <td>1050.0</td>
-      <td>Financial District</td>
-      <td>13832.50</td>
-      <td>13794.0</td>
-    </tr>
-  </tbody>
-</table>
-<p>139 rows × 11 columns</p>
-</div>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -13650,7 +12733,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Events-and-Festivals">Events and Festivals<a class="anchor-link" href="#Events-and-Festivals">&#182;</a></h2>
+<h1 id="III.-Scraping---Events-and-Festivals">III. Scraping - Events and Festivals<a class="anchor-link" href="#III.-Scraping---Events-and-Festivals">&#182;</a></h1>
 </div>
 </div>
 </div>
