@@ -39,7 +39,8 @@ We are interested whether or not big yearly events in San Francisco cause more c
 
 ## More Detail on Our Data Munging Process
 
-[Here]() is the jupyter notebook with all of our data munging exported to HTML.
+[Here](https://tjgordon.github.io/141B-Project/SF Street Cleaning Project - Reading, Scraping, and Cleaning Data.html) is the notebook with all of our data munging exported to HTML.
 
 # Analysis and Visualizations
 
+The html exported notebook containing our analysis, visualizations, and conclusions is [here](https://tjgordon.github.io/141B-Project/SF%20Street%20Cleaning%20Project%20-%20Analysis.html).   
