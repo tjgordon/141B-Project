@@ -1,5 +1,10 @@
 This is a final project for statistics 141B taken winter quarter 2017 done using Python. 
 
+Notebooks:  
+- [Munging](https://tjgordon.github.io/141B-Project/SF Street Cleaning Project - Reading, Scraping, and Cleaning Data.html)  
+- [Analysis](https://tjgordon.github.io/141B-Project/SF%20Street%20Cleaning%20Project%20-%20Analysis.html)  
+
+
 # Introduction
 
 ## Modivating Question 
