@@ -351,106 +351,16 @@ sns.heatmap(corr,
 
 # --------
 
-# ## Events and Festivals
+# # Events and Festivals Plots
 
-# ### Pride
-
-# In[37]:
-
-# Read the data scraped in the other notebook
-pride = pd.DataFrame.from_csv("pride.csv")
-pride
-
-
-# ### Outside Lands Music and Arts Festival
-
-# In[38]:
-
-url_ol = "https://en.wikipedia.org/wiki/Outside_Lands_Music_and_Arts_Festival"
-response = requests.get(url_ol)
-response.raise_for_status
-
-ol_bs = BeautifulSoup(response.text, 'lxml')
-
-
-# Years are in h3
-h3 = ol_bs.find_all(name = "h3")
-
-ol = []
-
-for h in h3:
-    span = h.find_all(name = "span", attrs={"class":"mw-headline"})
-    
-    # If there is a span in the h3
-    if span:
-        year = span[0].text
-        #print year 
-        
-        check_p = True
-        
-        #dates = []
-        
-        for sibling in h.find_next_siblings(limit=5):
-            
-            # Days are in h4 or p
-            if sibling.name == "h4":
-                #print "h4" + "\t" + sibling.text
-                ol.append([year, sibling.text.replace(u"\u2013", "-").replace("[edit]","")])
-                # If an h4 was found, stop looking for p
-                check_p = False
-                
-            elif sibling.name == "p" and check_p:
-                #print check_p
-                #print "p" + "\t" + sibling.text
-                ol.append([year, sibling.text.replace(u"\u2013", "-")])
-                # Formatting for 2011+ uses the date in a p tag
-                if "August" in sibling.text:
-                    break
-                
-        #print "\n"
-        #ol[str(year)] = dates
-
-ol
-
-
-# In[39]:
-
-# Separate the date ranges and fix the formatting
-
-ol2 = []
-for year_and_date in ol:
-    
-    date_split = year_and_date[1].split()
-    month = date_split[0]
-    if len(date_split) > 2:
-        # keep the year
-        year_and_date_new = [year_and_date[0]]
-        year_and_date_new.extend(date_split[1:])
-        ol2.append(year_and_date_new)
-    else:
-        days = date_split[1].split("-")
-        for day in days:
-            # keep the year
-            year_and_date_new = [year_and_date[0]]
-            year_and_date_new.append(month)
-            year_and_date_new.append(day)
-            ol2.append(year_and_date_new)
-
-ol2
-
-
-# In[40]:
-
-ol_dates = pd.to_datetime([" ".join(date) for date in ol2])
-ol_dates
-
-
-# # Events Plots
+# ## Pride
 
 # We merged data about attendance scraped from the [San Francisco Pride Wikipedia Page](https://en.wikipedia.org/wiki/San_Francisco_Pride) with the requests data to find the number of requests that were submitted on the days of the parade and in the neighborhoods surrounding the parade, shown in the following table.    
 
 # In[41]:
 
+# Read the data scraped in the other notebook
+pride = pd.DataFrame.from_csv("pride.csv")
 pride
 
 
@@ -472,7 +382,7 @@ plt.xlabel("Requests in Surrounding Neighborhoods")
 pride[["ReqCount_y", "attendance_num_x"]].corr()
 
 
-# # Outside Lands
+# ## Outside Lands
 
 # We used the dates of the Outside Lands Festival obtained by scraping the Wikipedia page to assess any association between cleaning requests and the festival.
 

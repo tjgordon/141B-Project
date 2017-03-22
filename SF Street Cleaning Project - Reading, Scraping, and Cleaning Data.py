@@ -7,7 +7,7 @@
 
 # ## Packages
 
-# In[2]:
+# In[11]:
 
 # Loading in data:
 import numpy as np
@@ -42,9 +42,9 @@ street.to_hdf('street.h5','table',append=False)
 
 # The next cell loads the h5 and displays the first few rows of our primary data source. All of the variables can be seen here.
 
-# In[3]:
+# In[12]:
 
-# Write h5: Run every second time and on of using this notebook
+# Read h5: Run every second time and on of running this notebook
 street_hdf = pd.HDFStore('street.h5')
 street = street_hdf.select('/table')
 street.head()
@@ -54,7 +54,7 @@ street.head()
 
 # To keep counts of requests consistent over the months and days, we remove years with incomplete data since our original data set starts in November 2008 and ends in January 2017.  
 
-# In[4]:
+# In[13]:
 
 street = street.loc[street['Opened'].dt.year != 2008]
 street = street.loc[street['Opened'].dt.year != 2017]
@@ -65,7 +65,7 @@ street = street.drop('index', 1) # Get rid of old index column
 
 # Some neighborhood names need to be changed to allow merging with other data sources later and to match our shape files.   
 
-# In[5]:
+# In[14]:
 
 street.ix[street.Neighborhood == "None", "Neighborhood"] = np.nan
 street.ix[street.Neighborhood == "Ocean View", "Neighborhood"] = "Oceanview"
@@ -76,21 +76,21 @@ street.ix[street.Neighborhood == "Presidio", "Neighborhood"] = "Presidio Heights
 
 # Next we create a month column for future plots and data merging. 
 
-# In[6]:
+# In[15]:
 
 street['month'] = [timestamp.month for timestamp in street.Opened]
 
 
 # A look of the first few rows of our cleaned data:
 
-# In[7]:
+# In[16]:
 
 street.head()
 
 
 # We then exported the cleaned data set for use in the analysis notebook.
 
-# In[9]:
+# In[17]:
 
 # Export h5 for faster reading in later
 # Warning: the resulting file is about 600 MB
@@ -101,14 +101,14 @@ street.to_hdf('street.h5','table',append=False)
 
 # Here we scrape demographic data from the source talked about on our website.
 
-# In[10]:
+# In[18]:
 
 requests_cache.install_cache('sf_cache') # So we don't make too many requests to the website
 
 
 # Grab the html from the website:
 
-# In[11]:
+# In[19]:
 
 url = "http://www.city-data.com/nbmaps/neigh-San-Francisco-California.html"
 response = requests.get(url)
@@ -117,7 +117,7 @@ response.raise_for_status
 
 # We first parse using Beautiful Soup and lxml. Then we grab the section with  what information we want for each neighborhood and store it as a list in neighborhood_divs. 
 
-# In[12]:
+# In[20]:
 
 neighborhoods_bs = BeautifulSoup(response.text, 'lxml')
 neighborhood_names = neighborhoods_bs.find_all(name = "span", attrs={'class':'street-name'})
@@ -127,7 +127,7 @@ neighborhood_divs = neighborhoods_bs.body.find_all(name = "div", attrs={'class':
 
 # Then, parsing the html for each neighborhood was not as simple as we thought. The format the website used involved a lot of navigable strings. The title of each section like "Area" and "Population" was not nested nicely. The value for the Area was stored as a navigable string as a sibling to Area instead of a child, so the parsing process got a bit more complicated. The function catch() was created to handle three different cases of how far the sibling of information was from the title. It is called catch because if the case fails, then the value should be NA, so the function makes use of try and except. The function also deals with converting the strings to numbers and removing any commas and dollar signs than get in the way.
 
-# In[13]:
+# In[21]:
 
 def catch(line, number, simple, c = "h", complicated = False):
     """
@@ -159,7 +159,7 @@ def catch(line, number, simple, c = "h", complicated = False):
 
 # We then created a demographic data frame with all the values we want to scrape stored as columns. For each one, one of the three cases is specified to the catch function and catch is also passed the find_all result of searching for the variable we want. Then the first few rows of the data frame are displayed. 
 
-# In[14]:
+# In[22]:
 
 demographic = pd.DataFrame({
         'Neighborhood': neighborhood_names, 
@@ -180,7 +180,7 @@ demographic.head()
 
 # So now we have lots of demographic data on gender, age, area, rent, income, population, and so on. All of this data is from 2015. Next, the neighborhood names from this data need to be cleaned to match up with our primary data set. The CombineNeighs() function was created to take two rows of the demographic data and combine them, either taking the average of the two columns (like median age for example) or sums the columns (like population for example). This is necessary in a few cases seen in the next cell. One example is where the demographic data had "Bayview District" and "Bayview Heights" while our primary street data only had "Bayview."
 
-# In[15]:
+# In[23]:
 
 def CombineNeighs(name1, name2, newName, df):
     """
@@ -209,7 +209,7 @@ def CombineNeighs(name1, name2, newName, df):
     return df
 
 
-# In[16]:
+# In[24]:
 
 # Clean up neighborhood names: make the demographic names match our data and shapefiles
 demographic = CombineNeighs("Bayview District", "Bayview Heights", "Bayview", demographic)
@@ -224,7 +224,7 @@ demographic = CombineNeighs("Financial District", "Financial District South", "F
 
 # The next cleaning section includes cases where the name just needs to be changed.
 
-# In[17]:
+# In[25]:
 
 demographic.loc[demographic.Neighborhood == "Buena Vista Park", "Neighborhood"] = "Buena Vista"
 demographic.loc[demographic.Neighborhood == "Cayuga Terrace", "Neighborhood"] = "Cayuga"
@@ -244,7 +244,9 @@ demographic.loc[demographic.Neighborhood == "Mount Davidson Manor", "Neighborhoo
 demographic.loc[demographic.Neighborhood == "Lake", "Neighborhood"] = "Lake Street"
 
 
-# In[45]:
+# Finally, the demographic information was exported for use in the analysis notebook.  
+
+# In[26]:
 
 # Export demographic here, then import in the other notebook and merge before plotting.  
 demographic.to_csv("demographic.csv")
@@ -254,7 +256,9 @@ demographic.to_csv("demographic.csv")
 
 # # III. Scraping - Events and Festivals
 
-# In[20]:
+# The dates and estimated attendance of the SF Pride parade were located in a table on the Wikipedia page.
+
+# In[27]:
 
 url_pride = "https://en.wikipedia.org/wiki/San_Francisco_Pride"
 response = requests.get(url_pride)
@@ -262,10 +266,11 @@ response.raise_for_status
 
 pride_bs = BeautifulSoup(response.text, 'lxml')
 
+# Locate the right table
 pride_table = pride_bs.find_all(name = "table", attrs={'class':'wikitable'})
 
 
-# In[21]:
+# In[28]:
 
 #type(pride_table[0])
 # The table is the first element
@@ -277,15 +282,14 @@ rows = pride_table[0].find_all(name = "tr")
 #for colname in rows[0].find_all(name = "th"):
 #    print colname.text
 
+# Determine the order of the columns
 colnames = [colname.text for colname in rows[0].find_all(name = "th")]
 print colnames
 
-#pride = [{colname, []} for colname in colnames]
-#print pride
 
+# In[29]:
 
-# In[22]:
-
+# Extract the dates and attendance data from the appropriate columns
 years = []
 dates = []
 attendance = []
@@ -300,7 +304,9 @@ for row in rows[1:]:
 assert(len(years) == len(dates) == len(attendance))
 
 
-# In[23]:
+# We could then create a data frame from the extracted data.  
+
+# In[30]:
 
 pride = pd.DataFrame.from_dict({"year": years,
                                 "date": dates,
@@ -314,8 +320,11 @@ pride = pride[pride.year > 2007]
 pride
 
 
-# In[25]:
+# The dates and attendance estimates required parsing to get compatible types for later use.
 
+# In[31]:
+
+# Extract the start and end dates of the parade
 startdates = [d[:-3] for d in pride.date]
 enddates = [d[:4] + d[-2:] for d in pride.date]
 startdatetimes = []
@@ -331,7 +340,9 @@ pride["end_date"] = pd.to_datetime(enddatetimes)
 pride
 
 
-# In[36]:
+# This function was used to parse the attendance strings and convert them to numeric data.
+
+# In[32]:
 
 def parse_attendance(attendance_str):
     """
@@ -354,7 +365,9 @@ pride
 
 # ### Outside Lands Music and Arts Festival
 
-# In[4]:
+# The process of extracting the dates from the Wikipedia page for Outside Lands was more involved, because the data was less structured. Some of the dates were stored in heading tags, while others were in paragraphs.
+
+# In[33]:
 
 url_ol = "https://en.wikipedia.org/wiki/Outside_Lands_Music_and_Arts_Festival"
 response = requests.get(url_ol)
@@ -403,7 +416,9 @@ for h in h3:
 ol
 
 
-# In[5]:
+# The extracted date ranges then had to be separated into individual dates.
+
+# In[34]:
 
 # Separate the date ranges and fix the formatting
 
@@ -412,12 +427,16 @@ for year_and_date in ol:
     
     date_split = year_and_date[1].split()
     month = date_split[0]
+    
     if len(date_split) > 2:
-        # keep the year
+        # For format 'Friday August 22'
+        # Keep the year
         year_and_date_new = [year_and_date[0]]
+        # Discard the weekday
         year_and_date_new.extend(date_split[1:])
         ol2.append(year_and_date_new)
     else:
+        # for format 'August 12-14'
         days = date_split[1].split("-")
         for day in days:
             # keep the year
@@ -429,63 +448,99 @@ for year_and_date in ol:
 ol2
 
 
-# In[6]:
+# The dates could then be converted to a datetime for use with pandas.  
+
+# In[35]:
 
 ol_dates = pd.to_datetime([" ".join(date) for date in ol2])
 ol_dates
 
 
-# In[10]:
+# The dates were then exported for use in the analysis notebook. 
+
+# In[36]:
 
 ol_dates_df = pd.DataFrame({"Festival_Date": ol_dates})
 ol_dates_df.to_csv("ol_dates.csv")
 
 
-# # Events Plots
+# ## Further Preparation for Pride Data
 
-# Grab all of June and group by day to get count of requests, then add boolean pride or not
+# For use in the analysis notebook, we calculated the number of requests in the surrounding neighborhoods on the days of the Pride parade.
 
-# In[31]:
+# In[37]:
 
+
+# Get all request from June
 streetJune = street.loc[street["Opened"].dt.month == 6]
 streetJune["DateOpened"] = streetJune["Opened"].dt.date # Yells at you
 
-# http://www.sfpride.org/parade/
+# Neighborhoods found on http://www.sfpride.org/parade/
 prideNeighs = ["South of Market", "Tenderloin", "Financial District", "Downtown / Union Square", "Civic Center"]
+# Get June requests in the right neighborhoods
 streetJune = streetJune.loc[streetJune.Neighborhood.isin(prideNeighs)]
 
+# Get the count of requests per day
 JuneDayReqs = streetJune.groupby(by = "DateOpened").count().CaseID
+
+# Get just the date 
 pride["StartNoTime"] = pride["start_date"].dt.date 
 pride["EndNoTime"] = pride["end_date"].dt.date 
+
+# Get requests per day
 JuneRequests = pd.DataFrame({"ReqCount": JuneDayReqs})
 JuneRequests = JuneRequests.reset_index()
+
+# If the parade took place on that day or not
 JuneRequests["Pride"] = [row in pride.StartNoTime.values for row in JuneRequests.DateOpened]
 
 
-# In[32]:
+# In[38]:
 
-streetJune.head()
+JuneRequests.head()
 
 
-# In[33]:
+# We then determined the number of requests on the days of the parade for each year by combining the dates of the parade with the requests on each day in June from above.  
 
+# In[39]:
+
+# Merge with start and end dates
 pride_merged_start = JuneRequests.merge(right = pride, right_on="StartNoTime", left_on="DateOpened")
 pride_merged_end = JuneRequests.merge(right = pride, right_on="EndNoTime", left_on="DateOpened")
+
+# Remove extraneous columns
 cols = ["DateOpened", "ReqCount", "attendance_num", "StartNoTime", "EndNoTime"]
 pride_merged_start = pride_merged_start[cols]
 pride_merged_end = pride_merged_end[cols]
+
+# Combine requests on both days into one df
 pride_merged = pd.concat([pride_merged_start, pride_merged_end])
 pride_merged["Year"] = [t.year for t in pride_merged.StartNoTime]
+
+# Get sum of requests over the two days of the parade each year
 req_year = pride_merged.groupby(by="Year").sum()
 req_year.reset_index(inplace=True)
+
+
 pride_merged_final = pride_merged_start
+
+# Extract year
 pride_merged_final["Year"] = [t.year for t in pride_merged_final.StartNoTime]
+
+# Merge with requests per year 
 pride_merged_final = pride_merged_final.merge(req_year, on = "Year")
-pride_merged_final = pride_merged_final[["DateOpened", "ReqCount_y", "attendance_num_x", "Year","StartNoTime", "EndNoTime"]]
+
+# Remove extraneous columns
+pride_merged_final = pride_merged_final[["DateOpened", 
+                                         "ReqCount_y", 
+                                         "attendance_num_x", 
+                                         "Year",
+                                         "StartNoTime", 
+                                         "EndNoTime"]]
 pride_merged_final
 
 
-# In[43]:
+# In[40]:
 
 pride_merged_final.to_csv("pride.csv")
 
