@@ -7,7 +7,7 @@ Notebooks:
 
 # Introduction
 
-## Modivating Question 
+## Motivating Question 
 
 The question that led us to this topic is: How do big cities deal with cleaning problems, like when a mattress is left out on the street, human waste is all over the road, or a garbage can overflows? 
 
@@ -36,7 +36,7 @@ Street and Sidewalk Cleaning from SF OpenData that we found [here](https://data.
 
 ## Adding Neighborhood Demographic Data
 
-Adding demographic data to our primary data source was not as straightforward. The avaliable census data is not by neighborhood and all websites we could find that used the kind of data we want did not list their source. So we ended up scraping [this website](http://www.city-data.com/nbmaps/neigh-San-Francisco-California.html) which lists   demographic statistics for each neighborhood. This required a bit of cleaning due to differences between the neighborhood names in the scraped data and the cleaning requests data set. 
+Adding demographic data to our primary data source was not as straightforward. The avaliable census data is not by neighborhood and all websites we could find that used the kind of data we want did not list their source. So we ended up scraping [this website](http://www.city-data.com/nbmaps/neigh-San-Francisco-California.html) which lists demographic statistics for each neighborhood. This required a bit of cleaning due to differences between the neighborhood names in the scraped data and the cleaning requests data set. 
 
 ## Getting Data for SF Pride and Outside Lands 
 
@@ -44,8 +44,13 @@ We are interested whether or not big yearly events in San Francisco are associat
 
 # More Detail on Our Data Munging Process
 
-[Here](https://tjgordon.github.io/141B-Project/SF Street Cleaning Project - Reading, Scraping, and Cleaning Data.html) is the notebook with all of our data munging exported to HTML.
+[Here](https://tjgordon.github.io/141B-Project/SF Street Cleaning Project - Reading, Scraping, and Cleaning Data.html) is the notebook with the data munging exported to HTML.
 
 # Analysis and Visualizations
 
-The html exported notebook containing our analysis, visualizations, and conclusions is [here](https://tjgordon.github.io/141B-Project/SF%20Street%20Cleaning%20Project%20-%20Analysis.html).   
+The HTML exported notebook containing our analysis, visualizations, and conclusions is [here](https://tjgordon.github.io/141B-Project/SF%20Street%20Cleaning%20Project%20-%20Analysis.html).   
+
+
+-----
+
+The notebook source files are available in [the repository here](https://github.com/tjgordon/141B-Project).
