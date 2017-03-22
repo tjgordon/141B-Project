@@ -1,4 +1,4 @@
-This is a final project for statistics 141B taken winter quarter 2017. 
+This is a final project for statistics 141B taken winter quarter 2017 done using Python. 
 
 # Introduction
 
@@ -29,52 +29,17 @@ Street and Sidewalk Cleaning from SF OpenData that we found [herej](https://data
 * Point: The coordinates of the request
 * Source: Voice in, Open311 App, Twitter, ...
 
-## Datasets  
-Our primary dataset is the Street and Sidewalk Cleaning dataset from SF OpenData:  
-https://data.sfgov.org/City-Management-and-Ethics/Street-and-Sidewalk-Cleaning/h3eg-w3pj   
-We plan to use this dataset for geographic boundaries of the neighborhoods:  
-https://data.sfgov.org/Geographic-Locations-and-Boundaries/Analysis-Neighborhoods/p5b7-5n3h/data   
-We also hope to use information about the demographics of the different neighborhoods. One possible source, which will probably require scraping, is:  
-http://www.city-data.com/nbmaps/neigh-San-Francisco-California.html  
+## Adding Neighborhood Demographic Data
 
+Adding demographic data to our primary data source, was not as simple as we thought. The avaliable census data is not by neighborhood and all websites we could find that used the kind of data we wanted did not list their source. So we ended up scraping [this website](http://www.city-data.com/nbmaps/neigh-San-Francisco-California.html) which gives a statistics type of presentation on demographics for each neighborhood. This required a bit of cleaning due to differences between the neighborhood names between the scraped data and our primary data. 
 
-## Questions  
-Do the type and frequency of requests differ by neighborhood? How does this relate to neighborhood demographics?  
-Does the time taken to fulfill requests differ by type and neighborhood?  
+## Getting Data for SF Pride and Outside Lands 
 
-What are the more common sources of how the cleaning request was sent in? How common is it to submit a request through twitter? Does that affect the amount of time it took the request to be fulfilled?  
+We are interested in if big yearly events cause more cleaning requests. In our analysis section, we learned that there are more requests in the summer, so we wanted to find two big summer events. San Francisco pride is a parade and festival held at the end of June each year to celebrate the lesbian, gay, bisexual, and transgender (LGBT) people and their allies. Outside lands is s a music festival held annually at Golden Gate Park. To get data on the dates these events were held each year of our primary data set and the attendance each year, we scraped wikipedia. [This page](https://en.wikipedia.org/wiki/San_Francisco_Pride) for Pride and [this page](https://en.wikipedia.org/wiki/Outside_Lands_Music_and_Arts_Festival) for Outside Lands. 
 
+## More Detail on Our Data Munging Process
 
+[Here]() is the jupyter notebook with all of our data munging exported to HTML.
 
+# Analysis and Visualizations
 
-
-**Other Question ideas**  
-- Important events? (Ex: OWS?)
-- Find proportion of a type of requests (ex: mattress)  
-- Are the neighborhood names with slashes on the borders of two neighborhoods?  
-- Determine day of week using doomsday algorithm and do analysis by weekday.  
-- histograms of columns
-- interactive maps with https://github.com/python-visualization/folium
-- Requests by income in neighborhood
-- other demographics
-    - housing prices
-- more specific neighborhoods
-- maps
-    - by request type (mattresses)
-    - refrigerator
-    - mattresses
-- time to fill requests
-    - by neighborhood
-- parse address
-- sources
-    - twitter
-    - open311?
-    
-**Parades and Festivals**
-(Make list of events manually and scrape wiki for past dates of these events)
-- San Francisco Pride
-- Outside Lands Music and Arts Festival
-- San Francisco Chinese New Year Festival and Parade
-
-street = street.merge(demographic,  on = "Neighborhood", how = "left")
-street.head()
