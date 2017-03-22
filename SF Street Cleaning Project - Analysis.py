@@ -7,7 +7,7 @@
 
 # # Libraries
 
-# In[1]:
+# In[8]:
 
 # Loading in data:
 import numpy as np
@@ -44,7 +44,7 @@ import re
 
 # See the other notebook for the process of reading, scraping, and cleaning the data.  
 
-# In[2]:
+# In[14]:
 
 # Read the data from the h5 file exported in the other notebook
 street2 = pd.HDFStore('street.h5')
@@ -54,7 +54,7 @@ street.head()
 
 # Some basic statistics on the dataset we are starting with:
 
-# In[3]:
+# In[15]:
 
 numRows = street.shape[0]
 print "We are working with", numRows, "rows."
@@ -63,13 +63,13 @@ print "Our dates range from", street.loc[numRows - 1, "Opened"],"to", street.loc
 
 # We supplemented this data with demographic statistics from [city-data.com](http://www.city-data.com/nbmaps/neigh-San-Francisco-California.html).  
 
-# In[4]:
+# In[16]:
 
 demographic = pd.DataFrame.from_csv("demographic.csv")
 demographic.head()
 
 
-# In[5]:
+# In[17]:
 
 street = street.merge(demographic, on = "Neighborhood", how = "left") 
 street.head()
@@ -77,7 +77,7 @@ street.head()
 
 # # Plots
 
-# In[6]:
+# In[18]:
 
 #plt.figure(figsize=(2,100)) # Doesn't do much
 theOrder = ["Voice In", "Open311", "Web Self Service", "Integrated Agency", "Twitter", "e-mail In", "Other Department"]
@@ -90,12 +90,12 @@ plt.show()
 
 # According to [the project's website](http://www.open311.org/learn/), Open311 allows people to report issues in public spaces to city officials through a [website](https://sf311.org/index.aspx?page=797) or [mobile app](https://www.sf311.org/mobile).  
 
-# In[7]:
+# In[19]:
 
 street.Neighborhood.value_counts
 
 
-# In[8]:
+# In[20]:
 
 # From: http://stackoverflow.com/questions/22391433/count-the-frequency-that-a-value-occurs-in-a-dataframe-column
 counts = street.groupby('Neighborhood').count()
@@ -104,7 +104,7 @@ counts = street.groupby('Neighborhood').count()
 # We can get the total number of cases from CaseID
 # unresolved cases by neighborhood
 
-# In[9]:
+# In[21]:
 
 counts = counts.sort_values(by = "CaseID",
                             ascending = False)
@@ -113,7 +113,7 @@ counts['UnclosedProp'] = (counts.Opened - counts.Closed) / counts.Opened
 counts.head()
 
 
-# In[10]:
+# In[22]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.factorplot(x = "CaseID", 
@@ -128,7 +128,7 @@ plt.title("Requests by Neighborhood (Top 15 Neighborhoods)")
 plt.show()
 
 
-# In[11]:
+# In[23]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.factorplot(x = "CaseID", 
@@ -145,7 +145,7 @@ plt.show()
 
 # To get a sense of where these neighborhood fall on a map, we created this plot:
 
-# In[12]:
+# In[24]:
 
 fig, ax = plt.subplots(figsize=(10,20))
 
@@ -179,7 +179,7 @@ plt.colorbar(mapper, shrink=0.4)
 plt.title("The Amount of Cleaning Requests For Each Neighborhood")
 
 
-# In[13]:
+# In[25]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.factorplot(x = "UnclosedProp", 
@@ -194,7 +194,7 @@ plt.title("Proportion of Unclosed Cleaning Requests by Neighborhood (Top 15 Neig
 plt.show()
 
 
-# In[14]:
+# In[26]:
 
 fig, ax = plt.subplots(figsize=(10,20))
 
@@ -234,13 +234,13 @@ plt.title("The Proportion of Unclosed Requests For Each Neighborhood")
 
 # Use supervisor district where there are too many neighborhoods. 
 
-# In[15]:
+# In[27]:
 
 request_counts = street.groupby(by = "Request Type").count().reset_index().ix[:,["Request Type","CaseID"]].sort_values(by = "CaseID", ascending = False)
 request_counts.head()
 
 
-# In[16]:
+# In[28]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.factorplot(y = "Request Type", 
@@ -261,18 +261,18 @@ plt.show()
 
 # We added the month of each request to compare the counts of requests by month.  
 
-# In[17]:
+# In[29]:
 
 street['month'] = [timestamp.month for timestamp in street.Opened]
 
 
-# In[18]:
+# In[30]:
 
 count_by_month = street.groupby(by='month').count().CaseID.reset_index()
 count_by_month
 
 
-# In[19]:
+# In[31]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.pointplot(y = "CaseID", 
@@ -287,7 +287,7 @@ plt.title("Requests by Month")
 plt.show()
 
 
-# In[20]:
+# In[32]:
 
 count_by_month.plot(y = "CaseID", 
                     x = "month")
@@ -296,7 +296,7 @@ count_by_month.plot(y = "CaseID",
 # Faster at closing requests by time?
 # Time to close requests by neighborhood?
 
-# In[21]:
+# In[33]:
 
 street['year'] = [timestamp.year for timestamp in street.Opened]
 count_by_year = street.groupby(by='year').count().CaseID.reset_index()
@@ -313,16 +313,40 @@ plt.title("Requests by Year")
 plt.show()
 
 
-# In[22]:
+# In[34]:
 
 [(colname, len(street[colname].unique())) for colname in list(street)]
 
 
-# In[23]:
+# In[35]:
 
 by_month_req_type = street.groupby(by=['month','Request Type']).count().CaseID.reset_index()
 by_month_req_type = by_month_req_type.sort_values(by = ['month', "CaseID"], ascending=[True,False])
 by_month_req_type.head()
+
+
+# ### Demographic Plots
+
+# join demographics with summary of street:  
+# - req
+# - prop unfilled
+# - time to fill req
+# - req / pop / area?
+# 
+# look for corr between those and:  
+# - HousePrice
+# - Income
+# - rent
+# - pop density
+# 
+
+# In[36]:
+
+# Source: https://stackoverflow.com/questions/29432629/correlation-matrix-using-pandas
+corr = street.corr()
+sns.heatmap(corr, 
+            xticklabels=corr.columns.values,
+            yticklabels=corr.columns.values)
 
 
 # --------
@@ -331,7 +355,7 @@ by_month_req_type.head()
 
 # ### Pride
 
-# In[24]:
+# In[37]:
 
 # Read the data scraped in the other notebook
 pride = pd.DataFrame.from_csv("pride.csv")
@@ -340,7 +364,7 @@ pride
 
 # ### Outside Lands Music and Arts Festival
 
-# In[25]:
+# In[38]:
 
 url_ol = "https://en.wikipedia.org/wiki/Outside_Lands_Music_and_Arts_Festival"
 response = requests.get(url_ol)
@@ -389,7 +413,7 @@ for h in h3:
 ol
 
 
-# In[26]:
+# In[39]:
 
 # Separate the date ranges and fix the formatting
 
@@ -415,24 +439,24 @@ for year_and_date in ol:
 ol2
 
 
-# In[27]:
+# In[40]:
 
 ol_dates = pd.to_datetime([" ".join(date) for date in ol2])
 ol_dates
 
 
-# # Events
+# # Events Plots
 
 # We merged data about attendance scraped from the [San Francisco Pride Wikipedia Page](https://en.wikipedia.org/wiki/San_Francisco_Pride) with the requests data to find the number of requests that were submitted on the days of the parade and in the neighborhoods surrounding the parade, shown in the following table.    
 
-# In[28]:
+# In[41]:
 
 pride
 
 
 # We used a scatterplot to see if there might be an association between the event attendance and the number of requests.
 
-# In[87]:
+# In[42]:
 
 pride.plot(x="ReqCount_y", y="attendance_num_x", kind="scatter")
 plt.title("Request in Neighborhoods Surrounding the SF Pride Parade and Parade Attendance")
@@ -443,7 +467,7 @@ plt.xlabel("Requests in Surrounding Neighborhoods")
 # There does not seem to be an association between the pride parade and requests in the surrounding neighborhoods.  
 # We used the correlation between these variables, shown below, for confirmation:  
 
-# In[30]:
+# In[43]:
 
 pride[["ReqCount_y", "attendance_num_x"]].corr()
 
@@ -452,7 +476,7 @@ pride[["ReqCount_y", "attendance_num_x"]].corr()
 
 # We used the dates of the Outside Lands Festival obtained by scraping the Wikipedia page to assess any association between cleaning requests and the festival.
 
-# In[83]:
+# In[44]:
 
 # Read the dates of the festival obtained from scraping
 ol_dates_df = pd.DataFrame.from_csv("ol_dates.csv", parse_dates=["Festival_Date"])
@@ -462,7 +486,7 @@ ol_dates = pd.DatetimeIndex(ol_dates_df.Festival_Date)
 ol_dates
 
 
-# In[33]:
+# In[45]:
 
 # Find all requests in August in Golden Gate Park
 AugustRequests = street.loc[street["Opened"].dt.month == 8]
@@ -471,7 +495,7 @@ OLNeighs = ["Golden Gate Park"]
 AugustRequests = AugustRequests.loc[AugustRequests.Neighborhood.isin(OLNeighs)]
 
 
-# In[88]:
+# In[46]:
 
 type(AugustRequests["DateOpened"].values[0])
 type(ol_dates[0])
@@ -489,7 +513,7 @@ ol_req_counts
 
 # To determine if the number of cleaning requests on the days that Outside Lands took place was unusual, we compared it with the usual number of requests on days in August.  
 
-# In[76]:
+# In[47]:
 
 # Add a new day column to allow groupby
 AugustRequests["Day"] = AugustRequests["Opened"].dt.day
@@ -503,7 +527,7 @@ Aug_req_by_day.CaseID = Aug_req_by_day.CaseID / 8
 Aug_req_by_day.head()
 
 
-# In[81]:
+# In[48]:
 
 Aug_req_by_day.hist()
 plt.title("Average Requests in Golden Gate Park on Days of August")
@@ -511,12 +535,12 @@ plt.xlabel("Average Requests")
 plt.ylabel("Frequency")
 
 
-# In[69]:
+# In[49]:
 
 np.mean(Aug_req_by_day.CaseID)
 
 
-# In[70]:
+# In[50]:
 
 np.median(Aug_req_by_day.CaseID)
 
@@ -529,7 +553,7 @@ np.median(Aug_req_by_day.CaseID)
 
 # ## Maps
 
-# In[39]:
+# In[51]:
 
 # Coordinates from https://en.wikipedia.org/wiki/San_Francisco and 
 # http://andrew.hedges.name/experiments/convert_lat_long/
@@ -537,13 +561,13 @@ m = folium.Map(location=[37.783, -122.416], zoom_start=12)
 m
 
 
-# In[40]:
+# In[52]:
 
 # Points
 street.ix[1,'Point']
 
 
-# In[41]:
+# In[53]:
 
 def to_coordinates(point):
     """
@@ -568,30 +592,30 @@ def to_coordinates(point):
 to_coordinates(street.ix[1,'Point'])
 
 
-# In[42]:
+# In[54]:
 
 # TODO: Make this a function
 folium.Marker(to_coordinates(street.ix[1,'Point']), popup = street.ix[1,'Request Type']).add_to(m)
 m
 
 
-# In[43]:
+# In[55]:
 
 street_mattress = street[street["Request Details"] == "Mattress"]
 street_mattress.head(2)
 
 
-# In[44]:
+# In[56]:
 
 len(street_mattress)
 
 
-# In[45]:
+# In[57]:
 
 mattress_count_by_month = street_mattress.groupby(by='month').count().CaseID.reset_index()
 
 
-# In[46]:
+# In[58]:
 
 sns.set_context("notebook", rc={"font.size" : 40}) # font_scale=1.5
 ax = sns.pointplot(y = "CaseID", 
@@ -606,7 +630,7 @@ plt.title("Requests by Month")
 plt.show()
 
 
-# In[47]:
+# In[59]:
 
 #from IPython.display import display
 for index, row in street_mattress.iterrows():
@@ -617,14 +641,14 @@ for index, row in street_mattress.iterrows():
     
 
 
-# In[48]:
+# In[60]:
 
 mattress_map = folium.Map(location=[37.783, -122.416], zoom_start=12)
 folium.GeoJson(open('Analysis Neighborhoods.geojson'), name='geojson').add_to(mattress_map)
 mattress_map
 
 
-# In[49]:
+# In[61]:
 
 # Neighborhood geojson from 
 # https://data.sfgov.org/Geographic-Locations-and-Boundaries/Analysis-Neighborhoods/p5b7-5n3h
