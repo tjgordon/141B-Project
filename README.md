@@ -36,7 +36,7 @@ Street and Sidewalk Cleaning from SF OpenData that we found [here](https://data.
 
 ## Adding Neighborhood Demographic Data
 
-Adding demographic data to our primary data source was not as straightforward. The avaliable census data is not by neighborhood and all websites we could find that used the kind of data we want did not list their source. So we ended up scraping [this website](http://www.city-data.com/nbmaps/neigh-San-Francisco-California.html) which lists demographic statistics for each neighborhood. This required a bit of cleaning due to differences between the neighborhood names in the scraped data and the cleaning requests data set. 
+Adding demographic data to our primary data source was not as straightforward. The avaliable census data is not by neighborhood and all websites we could find that used the kind of data we want did not list their source. So we ended up scraping [this website](http://www.city-data.com/nbmaps/neigh-San-Francisco-California.html) which lists demographic statistics for each neighborhood from 2015. This required a bit of cleaning due to differences between the neighborhood names in the scraped data and the cleaning requests data set. 
 
 ## Getting Data for SF Pride and Outside Lands 
 
