@@ -1,12 +1,33 @@
-# San Francisco Street Cleaning Analysis  
+This is a final project for statistics 141B taken winter quarter 2017. 
 
-[https://data.sfgov.org/City-Management-and-Ethics/Street-and-Sidewalk-Cleaning/h3eg-w3pj](https://data.sfgov.org/City-Management-and-Ethics/Street-and-Sidewalk-Cleaning/h3eg-w3pj)  
+# Introduction
 
-## Plan of attack  
-We are taking a bit of an exploratory data analysis approach by seeing what questions we have as we go along and what data we want to try and find to add in. We plan on using visualizations as much as possible and we definitely want to make use of plotting over a map of SF.  
+## Modivating Question 
 
-## New Phrasing of Question
-How does it work in a big city when a mattress is left out on the street, human waste is all over the street, or when a garbage can overflows? How do these cleaning requests vary in type and length to fulfill based on type or neighborhood demographics. 
+The modivating question that got us interested in this topic is: How do big cities deal with cleaning problems, like when a mattress is left out on the street, human waste is all over the road, or a garbage can overflows? 
+
+We found that the answer to this is through street cleaning requests. Street cleaning requests are made by people in the city through phone calls, mobile applications, tweets, and more. People can specify location, type, and so on. 
+
+## Plan of Attack 
+
+We are focusing on San Francisco for our main analysis. Some of our initial questions: 
+
+* Does the frequency of requests change with time?
+* How do cleaning requests vary in type and length to complete based on time of year or neighborhood? 
+* Are these variations related to neighborhood demographics?
+
+# Data
+
+## Our Primary Data Source
+
+Street and Sidewalk Cleaning from SF OpenData that we found [herej](https://data.sfgov.org/City-Management-and-Ethics/Street-and-Sidewalk-Cleaning/h3eg-w3pj). We were able to grab this data in a nice csv format that was simple to read into a DataFrame. This contains information on 693,612 cleaning requests in San Francisco. We subsetted the data to just examine requests from January 1st 2009 to December 31st 2016 to keep counts consistent for each month and day. Some key variables from this data set are 
+
+* Opened and Closed: When the request was made and when it was cleaned up
+* Request Type: Bulky items, Hazardous materials, ...
+* Request Details: Mattress, Graffiti, Encampment Cleanup, ...
+* Neighborhood: Downtown, Mission, Financial District, ...
+* Point: The coordinates of the request
+* Source: Voice in, Open311 App, Twitter, ...
 
 ## Datasets  
 Our primary dataset is the Street and Sidewalk Cleaning dataset from SF OpenData:  
