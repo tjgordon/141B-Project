@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8" />
-<title>SF Street Cleaning Project - Reading, Scraping, and Cleaning Data</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>SF Street Cleaning Project - Reading, Scraping, and Cleaning Data</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 <style type="text/css">
@@ -11,8 +13,8 @@
 *
 */
 /*!
- * Bootstrap v3.3.7 (http://getbootstrap.com)
- * Copyright 2011-2016 Twitter, Inc.
+ * Bootstrap v3.3.6 (http://getbootstrap.com)
+ * Copyright 2011-2015 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
@@ -1107,6 +1109,7 @@ a:focus {
   text-decoration: underline;
 }
 a:focus {
+  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -2535,6 +2538,7 @@ select[size] {
 input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus {
+  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -3025,6 +3029,7 @@ select[multiple].input-lg {
 .btn.focus,
 .btn:active.focus,
 .btn.active.focus {
+  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -8755,9 +8760,6 @@ body > #header .header-bar {
     margin-left: 10px;
   }
 }
-[dir="rtl"] #ipython_notebook {
-  float: right !important;
-}
 #noscript {
   width: auto;
   padding-top: 16px;
@@ -8960,14 +8962,8 @@ span#login_widget > .button .badge,
  *
  * Author: Jupyter Development Team
  */
-[dir="rtl"] #tabs li {
-  float: right;
-}
 ul#tabs {
   margin-bottom: 4px;
-}
-[dir="rtl"] ul#tabs {
-  margin-right: 0px;
 }
 ul#tabs a {
   padding-top: 6px;
@@ -8990,16 +8986,6 @@ ul.breadcrumb span {
 }
 .list_toolbar .tree-buttons {
   padding-top: 1px;
-}
-[dir="rtl"] .list_toolbar .tree-buttons {
-  float: left !important;
-}
-[dir="rtl"] .list_toolbar .pull-right {
-  padding-top: 1px;
-  float: left !important;
-}
-[dir="rtl"] .list_toolbar .pull-left {
-  float: right !important;
 }
 .dynamic-buttons {
   padding-top: 3px;
@@ -9136,9 +9122,6 @@ ul.breadcrumb span {
 #tree-selector {
   padding-right: 0px;
 }
-[dir="rtl"] #tree-selector a {
-  float: right;
-}
 #button-select-all {
   min-width: 50px;
 }
@@ -9228,9 +9211,6 @@ ul#new-menu {
   left: auto;
   right: 0;
 }
-[dir="rtl"] #new-menu {
-  text-align: right;
-}
 .kernel-menu-icon {
   padding-right: 12px;
   width: 24px;
@@ -9275,9 +9255,6 @@ ul#new-menu {
 }
 #running .panel-group .panel .panel-body .list_container .list_item:last-child {
   border-bottom: 0px;
-}
-[dir="rtl"] #running .col-sm-8 {
-  float: right !important;
 }
 .delete-button {
   display: none;
@@ -9574,7 +9551,6 @@ div.cell.selected.jupyter-soft-selected {
   }
 }
 div.inner_cell {
-  min-width: 0;
   /* Old browsers */
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -9595,6 +9571,11 @@ div.inner_cell {
   box-flex: 1;
   /* Modern browsers */
   flex: 1;
+}
+@-moz-document url-prefix() {
+  div.inner_cell {
+    overflow-x: hidden;
+  }
 }
 /* input_area and input_prompt must match in top border and margin for alignment */
 div.input_area {
@@ -11265,7 +11246,7 @@ div#pager .ui-resizable-handle::after {
 }
 .shortcut_key {
   display: inline-block;
-  width: 21ex;
+  width: 20ex;
   text-align: right;
   font-family: monospace;
 }
@@ -11577,7 +11558,6 @@ ul.typeahead-list > li > a {
   box-shadow: 0px 0px 12px 1px rgba(87, 87, 87, 0.2);
 }
 .terminal-app .terminal {
-  width: 100%;
   float: left;
   font-family: monospace;
   color: white;
@@ -11591,9 +11571,6 @@ ul.typeahead-list > li > a {
 .terminal-app .terminal dummy-screen {
   line-height: 1em;
   font-size: 14px;
-}
-.terminal-app .terminal .xterm-rows {
-  padding: 10px;
 }
 .terminal-app .terminal-cursor {
   color: black;
@@ -11654,10 +11631,8 @@ ul.typeahead-list > li > a {
 .highlight .mh { color: #666666 } /* Literal.Number.Hex */
 .highlight .mi { color: #666666 } /* Literal.Number.Integer */
 .highlight .mo { color: #666666 } /* Literal.Number.Oct */
-.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
 .highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
 .highlight .sc { color: #BA2121 } /* Literal.String.Char */
-.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
 .highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
 .highlight .s2 { color: #BA2121 } /* Literal.String.Double */
 .highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
@@ -11668,11 +11643,9 @@ ul.typeahead-list > li > a {
 .highlight .s1 { color: #BA2121 } /* Literal.String.Single */
 .highlight .ss { color: #19177C } /* Literal.String.Symbol */
 .highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
 .highlight .vc { color: #19177C } /* Name.Variable.Class */
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
-.highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
     </style>
 <style type="text/css">
@@ -11803,7 +11776,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Loading in data:</span>
@@ -11877,7 +11850,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Read h5: Run every second time and on of running this notebook</span>
@@ -11894,9 +11867,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[12]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[2]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -11918,99 +11889,93 @@ div#notebook {
       <th>Neighborhood</th>
       <th>Updated</th>
       <th>Point</th>
-      <th>month</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>342509</td>
-      <td>2009-01-01 08:30:51</td>
-      <td>2009-01-01 11:07:06</td>
+      <td>322566</td>
+      <td>2008-11-30 22:56:00</td>
+      <td>2009-07-21 16:24:00</td>
       <td>Closed</td>
       <td>DPW Ops Queue</td>
-      <td>Intersection of 13TH ST and FOLSOM ST</td>
-      <td>Street and Sidewalk Cleaning</td>
-      <td>Sidewalk_Cleaning</td>
-      <td>Encampment</td>
-      <td>Voice In</td>
-      <td>6.0</td>
-      <td>Mission</td>
-      <td>2009-01-01 11:07:06</td>
-      <td>(37.7695911772607, -122.415577110949)</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>342510</td>
-      <td>2009-01-01 08:33:46</td>
-      <td>2009-01-01 11:07:06</td>
-      <td>Closed</td>
-      <td>DPW Ops Queue</td>
-      <td>Intersection of 13TH ST and FOLSOM ST</td>
-      <td>Street and Sidewalk Cleaning</td>
-      <td>Sidewalk_Cleaning</td>
-      <td>Debris_filled_carts</td>
-      <td>Voice In</td>
-      <td>6.0</td>
-      <td>Mission</td>
-      <td>2009-01-01 11:07:06</td>
-      <td>(37.7695911772607, -122.415577110949)</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>342512</td>
-      <td>2009-01-01 08:44:54</td>
-      <td>2009-01-31 13:09:53</td>
-      <td>Closed</td>
-      <td>DPW Ops Queue</td>
-      <td>467 FILLMORE ST, SAN FRANCISCO, CA, 94117</td>
-      <td>Street and Sidewalk Cleaning</td>
-      <td>Street_Cleaning</td>
-      <td>Glass</td>
-      <td>Voice In</td>
-      <td>5.0</td>
-      <td>Western Addition</td>
-      <td>2009-01-31 13:09:53</td>
-      <td>(37.773807246, -122.431027495)</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>342514</td>
-      <td>2009-01-01 09:13:07</td>
-      <td>2009-01-01 11:07:06</td>
-      <td>Closed</td>
-      <td>DPW Ops Queue</td>
-      <td>Intersection of DWIGHT ST and GOETTINGEN ST</td>
+      <td>1566 HYDE ST, SAN FRANCISCO, CA, 94109</td>
       <td>Street and Sidewalk Cleaning</td>
       <td>Sidewalk_Cleaning</td>
       <td>Garbage</td>
       <td>Voice In</td>
-      <td>9.0</td>
-      <td>Excelsior</td>
-      <td>2009-01-01 11:07:06</td>
-      <td>(37.7232896018615, -122.405086927628)</td>
-      <td>1</td>
+      <td>3.0</td>
+      <td>Nob Hill</td>
+      <td>2009-07-21 16:24:00</td>
+      <td>(37.795328529, -122.418067787)</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>342519</td>
-      <td>2009-01-01 09:21:05</td>
-      <td>2009-01-21 06:07:13</td>
+      <th>1</th>
+      <td>322560</td>
+      <td>2008-11-30 22:24:00</td>
+      <td>2009-07-21 16:24:00</td>
       <td>Closed</td>
       <td>DPW Ops Queue</td>
-      <td>1610 MCALLISTER ST, SAN FRANCISCO, CA, 94115</td>
+      <td>Intersection of TAYLOR ST and TURK ST</td>
+      <td>Street and Sidewalk Cleaning</td>
+      <td>Illegal_Dumping</td>
+      <td>Garbage</td>
+      <td>Voice In</td>
+      <td>6.0</td>
+      <td>Downtown/Civic Center</td>
+      <td>2009-07-21 16:24:00</td>
+      <td>(37.7832142923006, -122.410764953722)</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>322559</td>
+      <td>2008-11-30 22:20:00</td>
+      <td>2008-12-01 06:07:00</td>
+      <td>Closed</td>
+      <td>DPW Ops Queue</td>
+      <td>1601 SACRAMENTO ST, SAN FRANCISCO, CA, 94109</td>
+      <td>Street and Sidewalk Cleaning</td>
+      <td>Illegal_Dumping</td>
+      <td>Mattress</td>
+      <td>Voice In</td>
+      <td>3.0</td>
+      <td>Nob Hill</td>
+      <td>2008-12-01 06:07:00</td>
+      <td>(37.791643509125, -122.419260423291)</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>322556</td>
+      <td>2008-11-30 21:34:00</td>
+      <td>2008-12-09 08:07:00</td>
+      <td>Closed</td>
+      <td>DPW Ops Queue</td>
+      <td>Intersection of 25TH ST and LUCKY ST</td>
       <td>Street and Sidewalk Cleaning</td>
       <td>Sidewalk_Cleaning</td>
       <td>Human_waste_or_urine</td>
       <td>Voice In</td>
-      <td>5.0</td>
-      <td>Western Addition</td>
-      <td>2009-01-21 06:07:13</td>
-      <td>(37.777956377, -122.43893262)</td>
-      <td>1</td>
+      <td>9.0</td>
+      <td>Mission</td>
+      <td>2008-12-09 08:07:00</td>
+      <td>(37.7509362479361, -122.413364630104)</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>322545</td>
+      <td>2008-11-30 20:45:00</td>
+      <td>2009-02-03 07:09:00</td>
+      <td>Closed</td>
+      <td>DPW Ops Queue</td>
+      <td>Intersection of 19TH ST and OAKWOOD ST</td>
+      <td>Street and Sidewalk Cleaning</td>
+      <td>Sidewalk_Cleaning</td>
+      <td>Empty_cart</td>
+      <td>Voice In</td>
+      <td>8.0</td>
+      <td>Mission</td>
+      <td>2009-02-03 07:09:00</td>
+      <td>(37.7598935230725, -122.42486308879)</td>
     </tr>
   </tbody>
 </table>
@@ -12044,7 +12009,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">street</span> <span class="o">=</span> <span class="n">street</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">street</span><span class="p">[</span><span class="s1">&#39;Opened&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span> <span class="o">!=</span> <span class="mi">2008</span><span class="p">]</span>
@@ -12064,14 +12029,14 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Some neighborhood names need to be changed to allow merging with other data sources later and to match our shape files.</p>
+<p>Some neighborhood names need to be changed to allow merging with other data sources later and to match our shape files for geographic plots.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">street</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">street</span><span class="o">.</span><span class="n">Neighborhood</span> <span class="o">==</span> <span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="s2">&quot;Neighborhood&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
@@ -12098,7 +12063,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">street</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">timestamp</span><span class="o">.</span><span class="n">month</span> <span class="k">for</span> <span class="n">timestamp</span> <span class="ow">in</span> <span class="n">street</span><span class="o">.</span><span class="n">Opened</span><span class="p">]</span>
@@ -12121,7 +12086,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">street</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -12135,9 +12100,7 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[16]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[6]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -12276,7 +12239,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[17]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Export h5 for faster reading in later</span>
@@ -12292,13 +12255,11 @@ div#notebook {
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>/home/tgordon/.local/lib/python2.7/site-packages/pandas/core/generic.py:1138: PerformanceWarning: 
+<pre>C:\ProgramData\Anaconda2\lib\site-packages\pandas\core\generic.py:1138: PerformanceWarning: 
 your performance may suffer as PyTables will pickle object types that it cannot
-map directly to c-types [inferred_type-&gt;mixed,key-&gt;block2_values] [items-&gt;[&#39;Status&#39;, &#39;Responsible Agency&#39;, &#39;Address&#39;, &#39;Category&#39;, &#39;Request Type&#39;, &#39;Request Details&#39;, &#39;Source&#39;, &#39;Neighborhood&#39;, &#39;Point&#39;]]
+map directly to c-types [inferred_type-&gt;mixed,key-&gt;block3_values] [items-&gt;[&#39;Status&#39;, &#39;Responsible Agency&#39;, &#39;Address&#39;, &#39;Category&#39;, &#39;Request Type&#39;, &#39;Request Details&#39;, &#39;Source&#39;, &#39;Neighborhood&#39;, &#39;Point&#39;]]
 
   return pytables.to_hdf(path_or_buf, key, self, **kwargs)
 </pre>
@@ -12330,7 +12291,7 @@ map directly to c-types [inferred_type-&gt;mixed,key-&gt;block2_values] [items-&
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">requests_cache</span><span class="o">.</span><span class="n">install_cache</span><span class="p">(</span><span class="s1">&#39;sf_cache&#39;</span><span class="p">)</span> <span class="c1"># So we don&#39;t make too many requests to the website</span>
@@ -12353,7 +12314,7 @@ map directly to c-types [inferred_type-&gt;mixed,key-&gt;block2_values] [items-&
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://www.city-data.com/nbmaps/neigh-San-Francisco-California.html&quot;</span>
@@ -12369,9 +12330,7 @@ map directly to c-types [inferred_type-&gt;mixed,key-&gt;block2_values] [items-&
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[19]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[9]:</div>
 
 
 <div class="output_text output_subarea output_execute_result">
@@ -12396,7 +12355,7 @@ map directly to c-types [inferred_type-&gt;mixed,key-&gt;block2_values] [items-&
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">neighborhoods_bs</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s1">&#39;lxml&#39;</span><span class="p">)</span>
@@ -12415,14 +12374,14 @@ map directly to c-types [inferred_type-&gt;mixed,key-&gt;block2_values] [items-&
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Then, parsing the html for each neighborhood was not as simple as we thought. The format the website used involved a lot of navigable strings. The title of each section like "Area" and "Population" was not nested nicely. The value for the Area was stored as a navigable string as a sibling to Area instead of a child, so the parsing process got a bit more complicated. The function catch() was created to handle three different cases of how far the sibling of information was from the title. It is called catch because if the case fails, then the value should be NA, so the function makes use of try and except. The function also deals with converting the strings to numbers and removing any commas and dollar signs than get in the way.</p>
+<p>Then, parsing the html for each neighborhood was not as simple as we thought. The format the website used involved a lot of navigable strings. The title of each section like "Area" and "Population" was not nested nicely. The value for the Area was stored as a navigable string as a sibling to Area instead of a child, so the parsing process got a bit more complicated. The function catch() was created to handle three different cases of how far the sibling of information was from the title. It is called catch because if the case fails, then the value should be NA, so the function makes use of try and except. The function also deals with converting the strings to numbers and removing any commas and dollar signs that get in the way.</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">catch</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">number</span><span class="p">,</span> <span class="n">simple</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="n">complicated</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
@@ -12470,7 +12429,7 @@ map directly to c-types [inferred_type-&gt;mixed,key-&gt;block2_values] [items-&
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">demographic</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
@@ -12498,9 +12457,7 @@ map directly to c-types [inferred_type-&gt;mixed,key-&gt;block2_values] [items-&
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[22]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[12]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -12615,7 +12572,7 @@ map directly to c-types [inferred_type-&gt;mixed,key-&gt;block2_values] [items-&
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">CombineNeighs</span><span class="p">(</span><span class="n">name1</span><span class="p">,</span> <span class="n">name2</span><span class="p">,</span> <span class="n">newName</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
@@ -12652,7 +12609,7 @@ map directly to c-types [inferred_type-&gt;mixed,key-&gt;block2_values] [items-&
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Clean up neighborhood names: make the demographic names match our data and shapefiles</span>
@@ -12674,11 +12631,9 @@ map directly to c-types [inferred_type-&gt;mixed,key-&gt;block2_values] [items-&
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>/home/tgordon/.local/lib/python2.7/site-packages/pandas/core/indexing.py:477: SettingWithCopyWarning: 
+<pre>C:\ProgramData\Anaconda2\lib\site-packages\pandas\core\indexing.py:477: SettingWithCopyWarning: 
 A value is trying to be set on a copy of a slice from a DataFrame.
 Try using .loc[row_indexer,col_indexer] = value instead
 
@@ -12704,7 +12659,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">demographic</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">demographic</span><span class="o">.</span><span class="n">Neighborhood</span> <span class="o">==</span> <span class="s2">&quot;Buena Vista Park&quot;</span><span class="p">,</span> <span class="s2">&quot;Neighborhood&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Buena Vista&quot;</span>
@@ -12742,7 +12697,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Export demographic here, then import in the other notebook and merge before plotting.  </span>
@@ -12778,6 +12733,15 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="San-Francisco-Pride">San Francisco Pride<a class="anchor-link" href="#San-Francisco-Pride">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <p>The dates and estimated attendance of the SF Pride parade were located in a table on the Wikipedia page.</p>
 
 </div>
@@ -12785,7 +12749,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">url_pride</span> <span class="o">=</span> <span class="s2">&quot;https://en.wikipedia.org/wiki/San_Francisco_Pride&quot;</span>
@@ -12805,7 +12769,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1">#type(pride_table[0])</span>
@@ -12831,9 +12795,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>[u&#39;Year&#39;, u&#39;Dates&#39;, u&#39;Festival name&#39;, u&#39;Theme&#39;, u&#39;Estimated attendance&#39;, u&#39;Notes&#39;]
 </pre>
@@ -12846,7 +12808,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Extract the dates and attendance data from the appropriate columns</span>
@@ -12881,7 +12843,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">pride</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="n">years</span><span class="p">,</span>
@@ -12892,95 +12854,9 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 
 <span class="c1"># Remove unused years</span>
 <span class="n">pride</span> <span class="o">=</span> <span class="n">pride</span><span class="p">[</span><span class="n">pride</span><span class="o">.</span><span class="n">year</span> <span class="o">&gt;</span> <span class="mi">2007</span><span class="p">]</span>
-
-<span class="n">pride</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[30]:</div>
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>attendance</th>
-      <th>date</th>
-      <th>year</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>38</th>
-      <td>1.2 million[25]</td>
-      <td>June 28–29</td>
-      <td>2008</td>
-    </tr>
-    <tr>
-      <th>39</th>
-      <td>1.2 million[26]</td>
-      <td>June 27–28</td>
-      <td>2009</td>
-    </tr>
-    <tr>
-      <th>40</th>
-      <td>1.2 million[27]</td>
-      <td>June 26–27</td>
-      <td>2010</td>
-    </tr>
-    <tr>
-      <th>41</th>
-      <td>1 million[28]</td>
-      <td>June 25–26</td>
-      <td>2011</td>
-    </tr>
-    <tr>
-      <th>42</th>
-      <td></td>
-      <td>June 23–24</td>
-      <td>2012</td>
-    </tr>
-    <tr>
-      <th>43</th>
-      <td>1.5 Million</td>
-      <td>June 29–30</td>
-      <td>2013</td>
-    </tr>
-    <tr>
-      <th>44</th>
-      <td>1.7 million</td>
-      <td>June 28–29</td>
-      <td>2014</td>
-    </tr>
-    <tr>
-      <th>45</th>
-      <td>1.8 million</td>
-      <td>June 27–28</td>
-      <td>2015</td>
-    </tr>
-    <tr>
-      <th>46</th>
-      <td>TBD</td>
-      <td>June 25-26</td>
-      <td>2016</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -12997,7 +12873,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Extract the start and end dates of the parade</span>
@@ -13013,114 +12889,9 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 <span class="n">pride</span><span class="p">[</span><span class="s2">&quot;start_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">startdatetimes</span><span class="p">)</span>
 <span class="n">pride</span><span class="p">[</span><span class="s2">&quot;end_date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">enddatetimes</span><span class="p">)</span>
 <span class="c1">#pride[&quot;datetimes&quot;] = [pd.date_range(dt, periods=2) for dt in startdatetimes]</span>
-<span class="n">pride</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[31]:</div>
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>attendance</th>
-      <th>date</th>
-      <th>year</th>
-      <th>start_date</th>
-      <th>end_date</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>38</th>
-      <td>1.2 million[25]</td>
-      <td>June 28–29</td>
-      <td>2008</td>
-      <td>2008-06-28</td>
-      <td>2008-06-29</td>
-    </tr>
-    <tr>
-      <th>39</th>
-      <td>1.2 million[26]</td>
-      <td>June 27–28</td>
-      <td>2009</td>
-      <td>2009-06-27</td>
-      <td>2009-06-28</td>
-    </tr>
-    <tr>
-      <th>40</th>
-      <td>1.2 million[27]</td>
-      <td>June 26–27</td>
-      <td>2010</td>
-      <td>2010-06-26</td>
-      <td>2010-06-27</td>
-    </tr>
-    <tr>
-      <th>41</th>
-      <td>1 million[28]</td>
-      <td>June 25–26</td>
-      <td>2011</td>
-      <td>2011-06-25</td>
-      <td>2011-06-26</td>
-    </tr>
-    <tr>
-      <th>42</th>
-      <td></td>
-      <td>June 23–24</td>
-      <td>2012</td>
-      <td>2012-06-23</td>
-      <td>2012-06-24</td>
-    </tr>
-    <tr>
-      <th>43</th>
-      <td>1.5 Million</td>
-      <td>June 29–30</td>
-      <td>2013</td>
-      <td>2013-06-29</td>
-      <td>2013-06-30</td>
-    </tr>
-    <tr>
-      <th>44</th>
-      <td>1.7 million</td>
-      <td>June 28–29</td>
-      <td>2014</td>
-      <td>2014-06-28</td>
-      <td>2014-06-29</td>
-    </tr>
-    <tr>
-      <th>45</th>
-      <td>1.8 million</td>
-      <td>June 27–28</td>
-      <td>2015</td>
-      <td>2015-06-27</td>
-      <td>2015-06-28</td>
-    </tr>
-    <tr>
-      <th>46</th>
-      <td>TBD</td>
-      <td>June 25-26</td>
-      <td>2016</td>
-      <td>2016-06-25</td>
-      <td>2016-06-26</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -13137,7 +12908,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="k">def</span> <span class="nf">parse_attendance</span><span class="p">(</span><span class="n">attendance_str</span><span class="p">):</span>
@@ -13167,9 +12938,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[32]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[25]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -13309,7 +13078,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[33]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">url_ol</span> <span class="o">=</span> <span class="s2">&quot;https://en.wikipedia.org/wiki/Outside_Lands_Music_and_Arts_Festival&quot;</span>
@@ -13329,67 +13098,29 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
     
     <span class="c1"># If there is a span in the h3</span>
     <span class="k">if</span> <span class="n">span</span><span class="p">:</span>
-        <span class="n">year</span> <span class="o">=</span> <span class="n">span</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span>
-        <span class="c1">#print year </span>
+        <span class="n">year</span> <span class="o">=</span> <span class="n">span</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span> 
         
         <span class="n">check_p</span> <span class="o">=</span> <span class="bp">True</span>
-        
-        <span class="c1">#dates = []</span>
         
         <span class="k">for</span> <span class="n">sibling</span> <span class="ow">in</span> <span class="n">h</span><span class="o">.</span><span class="n">find_next_siblings</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
             
             <span class="c1"># Days are in h4 or p</span>
             <span class="k">if</span> <span class="n">sibling</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;h4&quot;</span><span class="p">:</span>
                 <span class="c1">#print &quot;h4&quot; + &quot;\t&quot; + sibling.text</span>
-                <span class="n">ol</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">year</span><span class="p">,</span> <span class="n">sibling</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;</span><span class="se">\u2013</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;[edit]&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)])</span>
+                <span class="n">ol</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">year</span><span class="p">,</span> <span class="n">sibling</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">u&quot;</span><span class="se">\u2013</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;[edit]&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)])</span>
                 <span class="c1"># If an h4 was found, stop looking for p</span>
                 <span class="n">check_p</span> <span class="o">=</span> <span class="bp">False</span>
                 
             <span class="k">elif</span> <span class="n">sibling</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;p&quot;</span> <span class="ow">and</span> <span class="n">check_p</span><span class="p">:</span>
                 <span class="c1">#print check_p</span>
                 <span class="c1">#print &quot;p&quot; + &quot;\t&quot; + sibling.text</span>
-                <span class="n">ol</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">year</span><span class="p">,</span> <span class="n">sibling</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;</span><span class="se">\u2013</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)])</span>
+                <span class="n">ol</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">year</span><span class="p">,</span> <span class="n">sibling</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">u&quot;</span><span class="se">\u2013</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)])</span>
                 <span class="c1"># Formatting for 2011+ uses the date in a p tag</span>
                 <span class="k">if</span> <span class="s2">&quot;August&quot;</span> <span class="ow">in</span> <span class="n">sibling</span><span class="o">.</span><span class="n">text</span><span class="p">:</span>
                     <span class="k">break</span>
-                
-        <span class="c1">#print &quot;\n&quot;</span>
-        <span class="c1">#ol[str(year)] = dates</span>
-
-<span class="n">ol</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[33]:</div>
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>[[u&#39;2008&#39;, u&#39;Friday August 22&#39;],
- [u&#39;2008&#39;, u&#39;Saturday August 23&#39;],
- [u&#39;2008&#39;, u&#39;Sunday August 24&#39;],
- [u&#39;2009&#39;, u&#39;Friday August 28&#39;],
- [u&#39;2009&#39;, u&#39;Saturday August 29&#39;],
- [u&#39;2010&#39;, u&#39;Saturday August 14&#39;],
- [u&#39;2010&#39;, u&#39;Sunday August 15&#39;],
- [u&#39;2011&#39;, u&#39;August 12-14&#39;],
- [u&#39;2012&#39;, u&#39;August 10-12&#39;],
- [u&#39;2013&#39;, u&#39;August 9-11&#39;],
- [u&#39;2014&#39;, u&#39;August 8-10&#39;],
- [u&#39;2015&#39;, u&#39;August 7-9&#39;],
- [u&#39;2016&#39;, u&#39;August 5-9&#39;]]</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -13406,7 +13137,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Separate the date ranges and fix the formatting</span>
@@ -13433,47 +13164,9 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
             <span class="n">year_and_date_new</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">month</span><span class="p">)</span>
             <span class="n">year_and_date_new</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">day</span><span class="p">)</span>
             <span class="n">ol2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">year_and_date_new</span><span class="p">)</span>
-
-<span class="n">ol2</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[34]:</div>
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>[[u&#39;2008&#39;, u&#39;August&#39;, u&#39;22&#39;],
- [u&#39;2008&#39;, u&#39;August&#39;, u&#39;23&#39;],
- [u&#39;2008&#39;, u&#39;August&#39;, u&#39;24&#39;],
- [u&#39;2009&#39;, u&#39;August&#39;, u&#39;28&#39;],
- [u&#39;2009&#39;, u&#39;August&#39;, u&#39;29&#39;],
- [u&#39;2010&#39;, u&#39;August&#39;, u&#39;14&#39;],
- [u&#39;2010&#39;, u&#39;August&#39;, u&#39;15&#39;],
- [u&#39;2011&#39;, u&#39;August&#39;, u&#39;12&#39;],
- [u&#39;2011&#39;, u&#39;August&#39;, u&#39;14&#39;],
- [u&#39;2012&#39;, u&#39;August&#39;, u&#39;10&#39;],
- [u&#39;2012&#39;, u&#39;August&#39;, u&#39;12&#39;],
- [u&#39;2013&#39;, u&#39;August&#39;, u&#39;9&#39;],
- [u&#39;2013&#39;, u&#39;August&#39;, u&#39;11&#39;],
- [u&#39;2014&#39;, u&#39;August&#39;, u&#39;8&#39;],
- [u&#39;2014&#39;, u&#39;August&#39;, u&#39;10&#39;],
- [u&#39;2015&#39;, u&#39;August&#39;, u&#39;7&#39;],
- [u&#39;2015&#39;, u&#39;August&#39;, u&#39;9&#39;],
- [u&#39;2016&#39;, u&#39;August&#39;, u&#39;5&#39;],
- [u&#39;2016&#39;, u&#39;August&#39;, u&#39;9&#39;]]</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -13490,37 +13183,13 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">ol_dates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">([</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">ol2</span><span class="p">])</span>
-<span class="n">ol_dates</span>
 </pre></div>
 
 </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[35]:</div>
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>DatetimeIndex([&#39;2008-08-22&#39;, &#39;2008-08-23&#39;, &#39;2008-08-24&#39;, &#39;2009-08-28&#39;,
-               &#39;2009-08-29&#39;, &#39;2010-08-14&#39;, &#39;2010-08-15&#39;, &#39;2011-08-12&#39;,
-               &#39;2011-08-14&#39;, &#39;2012-08-10&#39;, &#39;2012-08-12&#39;, &#39;2013-08-09&#39;,
-               &#39;2013-08-11&#39;, &#39;2014-08-08&#39;, &#39;2014-08-10&#39;, &#39;2015-08-07&#39;,
-               &#39;2015-08-09&#39;, &#39;2016-08-05&#39;, &#39;2016-08-09&#39;],
-              dtype=&#39;datetime64[ns]&#39;, freq=None)</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -13537,14 +13206,61 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">ol_dates_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;Festival_Date&quot;</span><span class="p">:</span> <span class="n">ol_dates</span><span class="p">})</span>
 <span class="n">ol_dates_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;ol_dates.csv&quot;</span><span class="p">)</span>
+<span class="n">ol_dates_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
 </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[31]:</div>
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Festival_Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2008-08-22</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2008-08-23</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2008-08-24</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2009-08-28</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2009-08-29</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
 </div>
 </div>
 
@@ -13570,7 +13286,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="prompt input_prompt">In&nbsp;[32]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Get all request from June</span>
@@ -13605,90 +13321,16 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt"></div>
-
+<div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>/home/tgordon/.local/lib/python2.7/site-packages/ipykernel/__main__.py:4: SettingWithCopyWarning: 
+<pre>C:\ProgramData\Anaconda2\lib\site-packages\ipykernel\__main__.py:3: SettingWithCopyWarning: 
 A value is trying to be set on a copy of a slice from a DataFrame.
 Try using .loc[row_indexer,col_indexer] = value instead
 
 See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stable/indexing.html#indexing-view-versus-copy
+  app.launch_new_instance()
 </pre>
 </div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="n">JuneRequests</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-<div class="prompt output_prompt">Out[38]:</div>
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>DateOpened</th>
-      <th>ReqCount</th>
-      <th>Pride</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>2009-06-01</td>
-      <td>41</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>2009-06-02</td>
-      <td>41</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>2009-06-03</td>
-      <td>42</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>2009-06-04</td>
-      <td>31</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>2009-06-05</td>
-      <td>26</td>
-      <td>False</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
 </div>
 
 </div>
@@ -13707,7 +13349,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="prompt input_prompt">In&nbsp;[35]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1"># Merge with start and end dates</span>
@@ -13743,7 +13385,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
                                          <span class="s2">&quot;Year&quot;</span><span class="p">,</span>
                                          <span class="s2">&quot;StartNoTime&quot;</span><span class="p">,</span> 
                                          <span class="s2">&quot;EndNoTime&quot;</span><span class="p">]]</span>
-<span class="n">pride_merged_final</span>
+<span class="n">pride_merged_final</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
 </div>
@@ -13754,9 +13396,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 <div class="output">
 
 
-<div class="output_area">
-<div class="prompt output_prompt">Out[39]:</div>
-
+<div class="output_area"><div class="prompt output_prompt">Out[35]:</div>
 
 <div class="output_html rendered_html output_subarea output_execute_result">
 <div>
@@ -13818,33 +13458,6 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
       <td>2013-06-29</td>
       <td>2013-06-30</td>
     </tr>
-    <tr>
-      <th>5</th>
-      <td>2014-06-28</td>
-      <td>62</td>
-      <td>1700000.0</td>
-      <td>2014</td>
-      <td>2014-06-28</td>
-      <td>2014-06-29</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>2015-06-27</td>
-      <td>68</td>
-      <td>1800000.0</td>
-      <td>2015</td>
-      <td>2015-06-27</td>
-      <td>2015-06-28</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>2016-06-25</td>
-      <td>108</td>
-      <td>NaN</td>
-      <td>2016</td>
-      <td>2016-06-25</td>
-      <td>2016-06-26</td>
-    </tr>
   </tbody>
 </table>
 </div>
@@ -13858,7 +13471,7 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="prompt input_prompt">In&nbsp;[36]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="n">pride_merged_final</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;pride.csv&quot;</span><span class="p">)</span>
@@ -13872,8 +13485,4 @@ See the caveats in the documentation: http://pandas.pydata.org/pandas-docs/stabl
     </div>
   </div>
 </body>
-
- 
-
-
 </html>
